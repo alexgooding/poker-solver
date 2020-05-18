@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PokerSolver": {
+      "commandName": "Project",
+      "commandLineArgs": "10d 12s 2h 3c 14d"
+    }
+  }
+}
