@@ -4,20 +4,20 @@ using System.Globalization;
 
 namespace PokerSolver
 {
-    public class ParseCards
+    class ParseCards
     {
-        public static List<(int, string)> parseCards(string[] cards)
+        public static Hand parseCards(string[] cards)
         {
-            var myCards = new List<(int, string)>();
+            Hand myCards = new Hand();
             foreach (string card in cards)
             {
-                myCards.Add(parseCard(card));
+                myCards.addCard(parseCard(card));
             }
 
             return myCards;
         }
 
-        static (int, string) parseCard(string card)
+        private static Card parseCard(string card)
         {
             var value = "";
             var suit = "";
@@ -32,8 +32,11 @@ namespace PokerSolver
                     suit += c;
                 }
             }
+            Card parsedCard = new Card();
+            parsedCard.Value = int.Parse(value);
+            parsedCard.Suit = suit;
 
-            return (int.Parse(value), suit);
+            return parsedCard;
         }
     }
 }
