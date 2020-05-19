@@ -32,9 +32,7 @@ namespace PokerSolver
                     suit += c;
                 }
             }
-            Card parsedCard = new Card();
-            parsedCard.Value = int.Parse(value);
-            parsedCard.Suit = suit;
+            Card parsedCard = new Card(int.Parse(value), suit);
 
             return parsedCard;
         }
