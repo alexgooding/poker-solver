@@ -12,8 +12,6 @@ namespace PokerSolver
 
             Hand flushCards = myCards.isFlush();
 
-            var v = 5;
-
         }
     }
 }
