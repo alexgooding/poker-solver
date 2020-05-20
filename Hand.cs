@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace PokerSolver
@@ -94,8 +95,25 @@ namespace PokerSolver
             {
                 return null;
             }
+        }
 
+        public Dictionary<int, Hand> countByValue()
+        {
+            Dictionary<int, Hand> valueCount = new Dictionary<int, Hand>();
+            foreach (Card card in hand)
+            {
+                try
+                {
+                    valueCount.Add(card.Value, new Hand());
+                    valueCount[card.Value].addCard(card);
+                }
+                catch (ArgumentException)
+                {
+                    valueCount[card.Value].addCard(card);
+                }
+            }
 
+            return valueCount;
         }
     }
 }
