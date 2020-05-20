@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PokerSolver
 {
-    class Hand
+    class Hand : List<Card>
     {
         private List<Card> hand;
         public Hand(List<Card> hand)
@@ -19,6 +19,14 @@ namespace PokerSolver
         public void addCard(Card card)     
         {
             hand.Add(card);
+            hand = hand.OrderByDescending(o => o.Value).ToList();
+        }
+        public void mergeHands(Hand secondHand)
+        {
+            foreach (Card card in secondHand)
+            {
+                hand.Add(card);
+            }
             hand = hand.OrderByDescending(o => o.Value).ToList();
         }
         public int count()

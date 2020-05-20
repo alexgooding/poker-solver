@@ -12,6 +12,11 @@ namespace PokerSolver
 
             Hand flushCards = myCards.isFlush();
 
+            if (flushCards != null)
+            {
+                Console.WriteLine("A flush has been found!");
+            }
+
         }
     }
 }
