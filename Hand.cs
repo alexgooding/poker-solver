@@ -22,7 +22,7 @@ namespace PokerSolver
             cards.Add(card);
             cards = cards.OrderByDescending(o => o.Value).ToList();
         }
-        public void mergeHands(Hand secondHand)
+        public void addCards(Hand secondHand)
         {
             foreach (Card card in secondHand.cards)
             {
@@ -38,7 +38,15 @@ namespace PokerSolver
             Hand newHand = new Hand();
             for (int i = 0; i < n; i++)
             {
-                newHand.addCard(cards[i]);
+                // If the number of cards requested does not exist, just return as many that do
+                try
+                {
+                    newHand.addCard(cards[i]);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    break;
+                }
             }
 
             return newHand;
@@ -131,13 +139,13 @@ namespace PokerSolver
             {
                 if (element.Value.count() == 2)
                 {
-                    pairHand.mergeHands(element.Value);
+                    pairHand.addCards(element.Value);
                     // Remove the element from valueCount to make calculating the kicker hand easier
                     valueCount.Remove(element.Key);
                 }
                 else
                 {
-                    kickerHand.mergeHands(element.Value);
+                    kickerHand.addCards(element.Value);
                 }
             }
 
@@ -162,13 +170,13 @@ namespace PokerSolver
             {
                 if (element.Value.count() == 2)
                 {
-                    pairHand.mergeHands(element.Value);
+                    pairHand.addCards(element.Value);
                     // Remove the element from valueCount to make calculating the kicker hand easier
                     valueCount.Remove(element.Key);
                 }
                 else
                 {
-                    kickerHand.mergeHands(element.Value);
+                    kickerHand.addCards(element.Value);
                 }
             }
 
@@ -180,7 +188,18 @@ namespace PokerSolver
             {
                 return (pairHand, kickerHand.getHighestNCards(3));
             }
+        }
 
+        public (Hand, Hand) findHighCard()
+        {
+            Hand highestCards = getHighestNCards(5);
+
+            Hand highCard = new Hand();
+            highCard.addCard(highestCards.cards[0]);
+            highestCards.cards.RemoveAt(0);
+            Hand kickerHand = new Hand(highestCards.cards);
+
+            return (highCard, kickerHand);
         }
 
 

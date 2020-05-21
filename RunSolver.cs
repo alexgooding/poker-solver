@@ -18,6 +18,8 @@ namespace PokerSolver
 
             (Hand, Hand) pairsAndKicker = myCards.findTwoPair();
 
+            (Hand, Hand) highCardAndKickers = myCards.findHighCard();
+
             Hand flushCards = myCards.findFlush().Item1;
 
             if (flushCards != null)
