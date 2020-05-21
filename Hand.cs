@@ -120,6 +120,37 @@ namespace PokerSolver
             return valueCount;
         }
 
+        public (Hand, Hand) findTwoPair()
+        {
+            Dictionary<int, Hand> valueCount = countByValue();
+
+            Hand pairHand = new Hand();
+            Hand kickerHand = new Hand();
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 2)
+                {
+                    pairHand.mergeHands(element.Value);
+                    // Remove the element from valueCount to make calculating the kicker hand easier
+                    valueCount.Remove(element.Key);
+                }
+                else
+                {
+                    kickerHand.mergeHands(element.Value);
+                }
+            }
+
+            if (pairHand.count() != 4)
+            {
+                return (null, null);
+            }
+            else
+            {
+                return (pairHand, kickerHand.getHighestNCards(1));
+            }
+        }
+
         public (Hand, Hand) findPair()
         {
             Dictionary<int, Hand> valueCount = countByValue();
