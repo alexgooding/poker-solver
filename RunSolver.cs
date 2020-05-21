@@ -14,7 +14,9 @@ namespace PokerSolver
             Hand tens = valueCount[10];
             Console.WriteLine("There are {0} tens in the hand.", tens.count());
 
-            Hand flushCards = myCards.isFlush();
+            (Hand, Hand) pairsAndKickers = myCards.findPair();
+
+            Hand flushCards = myCards.findFlush().Item1;
 
             if (flushCards != null)
             {
