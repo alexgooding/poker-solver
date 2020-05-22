@@ -51,6 +51,20 @@ namespace PokerSolver
 
             return newHand;
         }
+        private Hand findCardsByValue(int value)
+        {
+            Hand valueCards = new Hand();
+
+            foreach (Card card in cards)
+            {
+                if (card.Value == value)
+                {
+                    valueCards.addCard(card);
+                }
+            }
+
+            return valueCards;
+        }
         private Dictionary<int, Hand> countByValue()
         {
             Dictionary<int, Hand> valueCount = new Dictionary<int, Hand>();
@@ -156,6 +170,45 @@ namespace PokerSolver
             }
 
             return (flushHand, kickerHand);
+        }
+        public (Hand, Hand) findStraight()
+        {
+            if (cards.Count < 5)
+            {
+                return (null, null);
+            }
+
+            Hand straightHand = new Hand();
+            Hand kickerHand = null;
+
+            int previousValue = cards[0].Value + 1;
+
+            foreach (Card card in cards)
+            {
+                if (straightHand.count() == 5)
+                {
+                    break;
+                }
+                else if (card.Value == previousValue - 1)
+                {
+                    straightHand.addCard(card);
+                    previousValue -= 1;
+                }
+                else if (card.Value < previousValue - 1) {
+                    straightHand = new Hand();
+                    straightHand.addCard(card);
+                    previousValue = card.Value;
+                }
+            }
+
+            if (straightHand.count() < 5)
+            {
+                return (null, null);
+            }
+            else
+            {
+                return (straightHand, kickerHand);
+            }
         }
 
         public (Hand, Hand) findTriple()
