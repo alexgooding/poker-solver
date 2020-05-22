@@ -122,6 +122,26 @@ namespace PokerSolver
             }
         }
 
+        public (Hand, Hand) findRoyalFlush()
+        {
+            (Hand, Hand) straightFlushHand = findStraightFlush();
+            if (straightFlushHand.Item1 == null)
+            {
+                return (null, null);
+            }
+            else
+            {
+                if (straightFlushHand.Item1.findCardsByValue(14).count() == 1)
+                {
+                    return straightFlushHand;
+                }
+                else
+                {
+                    return (null, null);
+                }
+            }
+        }
+
         public (Hand, Hand) findStraightFlush()
         {
             (Hand, Hand) flushHand = findFlush();
