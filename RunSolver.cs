@@ -10,31 +10,23 @@ namespace PokerSolver
         {
             Hand myCards = ParseCards.parseCards(args);
 
-            (Hand, Hand) royalFlush = myCards.findRoyalFlush();
+            (Hand, Hand) bestHand = myCards.findBestHand();
 
-            (Hand, Hand) straightFlush = myCards.findStraightFlush();
-
-            (Hand, Hand) fourAndKicker = myCards.findFour();
-
-            (Hand, Hand) fullHouse = myCards.findFullHouse();
-
-            (Hand, Hand) straight = myCards.findStraight();
-
-            (Hand, Hand) tripleAndKickers = myCards.findTriple();
-
-            (Hand, Hand) pairsAndKickers = myCards.findPair();
-
-            (Hand, Hand) pairsAndKicker = myCards.findTwoPair();
-
-            (Hand, Hand) highCardAndKickers = myCards.findHighCard();
-
-            Hand flushCards = myCards.findFlush().Item1;
-
-            if (flushCards != null)
+            Console.WriteLine("The best hand found is:");
+            Console.Write("( ");
+            foreach (Card card in bestHand.Item1.getCards())
             {
-                Console.WriteLine("A flush has been found!");
+                Console.Write("{0}{1} ", card.Value, card.Suit); 
             }
-
+            Console.Write("), ( ");
+            if (bestHand.Item2 != null)
+            {
+                foreach (Card card in bestHand.Item2.getCards())
+                {
+                    Console.Write("{0}{1} ", card.Value, card.Suit);
+                }
+            }
+            Console.Write(")");
         }
     }
 }

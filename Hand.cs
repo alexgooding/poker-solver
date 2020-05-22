@@ -10,6 +10,7 @@ namespace PokerSolver
     {
         public const int maxCardsInPlay = 7;
         public const int maxHandSize = 5;
+
         private List<Card> cards;
         public Hand(List<Card> cards)
         {
@@ -18,6 +19,10 @@ namespace PokerSolver
         public Hand()
         {
             this.cards = new List<Card>();
+        }
+        public List<Card> getCards()
+        {
+            return cards;
         }
         public void addCard(Card card)     
         {
@@ -329,6 +334,24 @@ namespace PokerSolver
             return (highCard, kickerHand);
         }
 
+        public (Hand, Hand) findBestHand()
+        {
+            var handCheckingMethods = new List<Func<(Hand, Hand)>> { findRoyalFlush, findStraightFlush, findFour, 
+                findFullHouse, findFlush, findStraight, findTriple, findTwoPair, findPair, findHighCard };
+
+            (Hand, Hand) bestHand = (null, null);
+
+            foreach (var method in handCheckingMethods)
+            {
+                bestHand = method();
+                if (bestHand.Item1 != null)
+                {
+                    break;
+                }
+            }
+
+            return bestHand;
+        }
 
     }
 }
