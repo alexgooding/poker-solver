@@ -86,18 +86,23 @@ namespace PokerSolver
             return valueCount;
         }
 
-        public (Hand, Hand) findFour()
+        private (Hand, Hand) findMatchingValueHands(int numberOfSameValueCards, int mainHandSize)
         {
+            if (cards.Count < mainHandSize)
+            {
+                return (null, null);
+            }
+
             Dictionary<int, Hand> valueCount = countByValue();
 
-            Hand fourHand = new Hand();
+            Hand mainHand = new Hand();
             Hand kickerHand = new Hand();
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
-                if (element.Value.count() == 4)
+                if (element.Value.count() == numberOfSameValueCards)
                 {
-                    fourHand.addCards(element.Value);
+                    mainHand.addCards(element.Value);
                     // Remove the element from valueCount to make calculating the kicker hand easier
                     valueCount.Remove(element.Key);
                 }
@@ -107,14 +112,19 @@ namespace PokerSolver
                 }
             }
 
-            if (fourHand.count() != 4)
+            if (mainHand.count() != mainHandSize)
             {
                 return (null, null);
             }
             else
             {
-                return (fourHand, kickerHand.getHighestNCards(1));
+                return (mainHand, kickerHand.getHighestNCards(maxHandSize - mainHandSize));
             }
+        }
+
+        public (Hand, Hand) findFour()
+        {
+            return findMatchingValueHands(4, 4);
         }
         public (Hand, Hand) findFullHouse()
         {
@@ -261,95 +271,17 @@ namespace PokerSolver
 
         public (Hand, Hand) findTriple()
         {
-            Dictionary<int, Hand> valueCount = countByValue();
-
-            Hand tripleHand = new Hand();
-            Hand kickerHand = new Hand();
-
-            foreach (KeyValuePair<int, Hand> element in valueCount)
-            {
-                if (element.Value.count() == 3)
-                {
-                    tripleHand.addCards(element.Value);
-                    // Remove the element from valueCount to make calculating the kicker hand easier
-                    valueCount.Remove(element.Key);
-                }
-                else
-                {
-                    kickerHand.addCards(element.Value);
-                }
-            }
-
-            if (tripleHand.count() != 3)
-            {
-                return (null, null);
-            }
-            else
-            {
-                return (tripleHand, kickerHand.getHighestNCards(2));
-            }
+            return findMatchingValueHands(3, 3);
         }
 
         public (Hand, Hand) findTwoPair()
         {
-            Dictionary<int, Hand> valueCount = countByValue();
-
-            Hand pairHand = new Hand();
-            Hand kickerHand = new Hand();
-
-            foreach (KeyValuePair<int, Hand> element in valueCount)
-            {
-                if (element.Value.count() == 2)
-                {
-                    pairHand.addCards(element.Value);
-                    // Remove the element from valueCount to make calculating the kicker hand easier
-                    valueCount.Remove(element.Key);
-                }
-                else
-                {
-                    kickerHand.addCards(element.Value);
-                }
-            }
-
-            if (pairHand.count() != 4)
-            {
-                return (null, null);
-            }
-            else
-            {
-                return (pairHand, kickerHand.getHighestNCards(1));
-            }
+            return findMatchingValueHands(2, 4);
         }
 
         public (Hand, Hand) findPair()
         {
-            Dictionary<int, Hand> valueCount = countByValue();
-
-            Hand pairHand = new Hand();
-            Hand kickerHand = new Hand();
-
-            foreach (KeyValuePair<int, Hand> element in valueCount)
-            {
-                if (element.Value.count() == 2)
-                {
-                    pairHand.addCards(element.Value);
-                    // Remove the element from valueCount to make calculating the kicker hand easier
-                    valueCount.Remove(element.Key);
-                }
-                else
-                {
-                    kickerHand.addCards(element.Value);
-                }
-            }
-
-            if (pairHand.count() != 2)
-            {
-                return (null, null);
-            }
-            else
-            {
-                return (pairHand, kickerHand.getHighestNCards(3));
-            }
+            return findMatchingValueHands(2, 2);
         }
 
         public (Hand, Hand) findHighCard()

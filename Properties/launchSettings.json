@@ -2,7 +2,7 @@
   "profiles": {
     "PokerSolver": {
       "commandName": "Project",
-      "commandLineArgs": "10d 10s 9s 9h 9c 2d 7h 10c"
+      "commandLineArgs": "11d 8s 9s 9h 8d 2d 8h 8c"
     }
   }
 }
