@@ -58,6 +58,25 @@ namespace PokerSolver
 
             return newHand;
         }
+
+        public Hand getLowestNCards(int n)
+        {
+            Hand newHand = new Hand();
+            for (int i = cards.Count-1; i >= cards.Count-n; i--)
+            {
+                // If the number of cards requested does not exist, just return as many that do
+                try
+                {
+                    newHand.addCard(cards[i]);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    break;
+                }
+            }
+
+            return newHand;
+        }
         private Hand findCardsByValue(int value)
         {
             Hand valueCards = new Hand();
@@ -91,9 +110,9 @@ namespace PokerSolver
             return valueCount;
         }
 
-        private (Hand, Hand) findMatchingValueHands(int numberOfSameValueCards, int mainHandSize)
+        private (Hand, Hand) findMatchingValueHands(int numberOfSameValueCards)
         {
-            if (cards.Count < mainHandSize)
+            if (cards.Count < numberOfSameValueCards)
             {
                 return (null, null);
             }
@@ -117,13 +136,13 @@ namespace PokerSolver
                 }
             }
 
-            if (mainHand.count() != mainHandSize)
+            if (mainHand.count() != numberOfSameValueCards)
             {
                 return (null, null);
             }
             else
             {
-                return (mainHand, kickerHand.getHighestNCards(maxHandSize - mainHandSize));
+                return (mainHand, kickerHand.getHighestNCards(maxHandSize - numberOfSameValueCards));
             }
         }
 
@@ -162,7 +181,7 @@ namespace PokerSolver
 
         public (Hand, Hand) findFour()
         {
-            return findMatchingValueHands(4, 4);
+            return findMatchingValueHands(4);
         }
         public (Hand, Hand) findFullHouse()
         {
@@ -174,6 +193,8 @@ namespace PokerSolver
             }
 
             Hand tripleHand = new Hand();
+            Hand pairHand = new Hand();
+            Hand fullHouseHand = new Hand();
             Hand kickerHand = null;
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
@@ -192,23 +213,25 @@ namespace PokerSolver
             }
             if (tripleHand.count() == 6)
             {
-                tripleHand = tripleHand.getHighestNCards(maxHandSize);
+                fullHouseHand = tripleHand.getHighestNCards(maxHandSize);
             }
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
                 if (element.Value.count() == 2)
                 {
-                    tripleHand.addCards(element.Value);
+                    pairHand.addCards(element.Value);
                 }
             }
 
-            if (tripleHand.count() >= maxHandSize)
+            if (tripleHand.count() + pairHand.count() >= maxHandSize)
             {
-                tripleHand = tripleHand.getHighestNCards(maxHandSize);
+                pairHand = pairHand.getHighestNCards(2);
+                fullHouseHand.addCards(tripleHand);
+                fullHouseHand.addCards(pairHand);
             }
 
-            return (tripleHand, kickerHand);
+            return (fullHouseHand, kickerHand);
         }
 
         public (Hand, Hand) findFlush()
@@ -309,17 +332,55 @@ namespace PokerSolver
 
         public (Hand, Hand) findTriple()
         {
-            return findMatchingValueHands(3, 3);
+            return findMatchingValueHands(3);
         }
 
         public (Hand, Hand) findTwoPair()
         {
-            return findMatchingValueHands(2, 4);
+            if (cards.Count < 4)
+            {
+                return (null, null);
+            }
+
+            Dictionary<int, Hand> valueCount = countByValue();
+
+            Hand mainHand = new Hand();
+            Hand kickerHand = new Hand();
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 2)
+                {
+                    mainHand.addCards(element.Value);
+                    // Remove the element from valueCount to make calculating the kicker hand easier
+                    valueCount.Remove(element.Key);
+                }
+                else
+                {
+                    kickerHand.addCards(element.Value);
+                }
+            }
+
+            if (mainHand.count() < 4)
+            {
+                return (null, null);
+            }
+            else if (mainHand.count() == 4)
+            {
+                return (mainHand, kickerHand.getHighestNCards(1));
+            }
+            else
+            {
+                kickerHand.addCards(getLowestNCards(mainHand.count() - 4));
+                mainHand = mainHand.getHighestNCards(4);
+
+                return (mainHand, kickerHand.getHighestNCards(1));
+            }
         }
 
         public (Hand, Hand) findPair()
         {
-            return findMatchingValueHands(2, 2);
+            return findMatchingValueHands(2);
         }
 
         public (Hand, Hand) findHighCard()
