@@ -51,6 +51,55 @@ namespace PokerSolver
 
             return newHand;
         }
+        private Dictionary<int, Hand> countByValue()
+        {
+            Dictionary<int, Hand> valueCount = new Dictionary<int, Hand>();
+            foreach (Card card in cards)
+            {
+                try
+                {
+                    valueCount.Add(card.Value, new Hand());
+                    valueCount[card.Value].addCard(card);
+                }
+                catch (ArgumentException)
+                {
+                    valueCount[card.Value].addCard(card);
+                }
+            }
+
+            return valueCount;
+        }
+
+        public (Hand, Hand) findFour()
+        {
+            Dictionary<int, Hand> valueCount = countByValue();
+
+            Hand fourHand = new Hand();
+            Hand kickerHand = new Hand();
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 4)
+                {
+                    fourHand.addCards(element.Value);
+                    // Remove the element from valueCount to make calculating the kicker hand easier
+                    valueCount.Remove(element.Key);
+                }
+                else
+                {
+                    kickerHand.addCards(element.Value);
+                }
+            }
+
+            if (fourHand.count() != 4)
+            {
+                return (null, null);
+            }
+            else
+            {
+                return (fourHand, kickerHand.getHighestNCards(1));
+            }
+        }
 
         public (Hand, Hand) findFlush()
         {
@@ -109,24 +158,6 @@ namespace PokerSolver
             return (flushHand, kickerHand);
         }
 
-        public Dictionary<int, Hand> countByValue()
-        {
-            Dictionary<int, Hand> valueCount = new Dictionary<int, Hand>();
-            foreach (Card card in cards)
-            {
-                try
-                {
-                    valueCount.Add(card.Value, new Hand());
-                    valueCount[card.Value].addCard(card);
-                }
-                catch (ArgumentException)
-                {
-                    valueCount[card.Value].addCard(card);
-                }
-            }
-
-            return valueCount;
-        }
         public (Hand, Hand) findTriple()
         {
             Dictionary<int, Hand> valueCount = countByValue();

@@ -10,9 +10,7 @@ namespace PokerSolver
         {
             Hand myCards = ParseCards.parseCards(args);
 
-            Dictionary<int, Hand> valueCount = myCards.countByValue();
-            Hand tens = valueCount[10];
-            Console.WriteLine("There are {0} tens in the hand.", tens.count());
+            (Hand, Hand) fourAndKicker = myCards.findFour();
 
             (Hand, Hand) tripleAndKickers = myCards.findTriple();
 
