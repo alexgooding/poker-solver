@@ -12,6 +12,8 @@ namespace PokerSolver
 
             (Hand, Hand) fourAndKicker = myCards.findFour();
 
+            (Hand, Hand) fullHouse = myCards.findFullHouse();
+
             (Hand, Hand) straight = myCards.findStraight();
 
             (Hand, Hand) tripleAndKickers = myCards.findTriple();

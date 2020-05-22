@@ -8,6 +8,8 @@ namespace PokerSolver
 {
     class Hand : List<Card>
     {
+        public const int maxCardsInPlay = 7;
+        public const int maxHandSize = 5;
         private List<Card> cards;
         public Hand(List<Card> cards)
         {
@@ -114,10 +116,56 @@ namespace PokerSolver
                 return (fourHand, kickerHand.getHighestNCards(1));
             }
         }
+        public (Hand, Hand) findFullHouse()
+        {
+            Dictionary<int, Hand> valueCount = countByValue();
+
+            if (cards.Count < maxHandSize)
+            {
+                return (null, null);
+            }
+
+            Hand tripleHand = new Hand();
+            Hand kickerHand = null;
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 3)
+                {
+                    tripleHand.addCards(element.Value);
+                    // Remove the element from valueCount to make finding the pair easier
+                    valueCount.Remove(element.Key);
+                }
+            }
+
+            if (tripleHand.count() == 0)
+            {
+                return (null, null);
+            }
+            if (tripleHand.count() == 6)
+            {
+                tripleHand = tripleHand.getHighestNCards(maxHandSize);
+            }
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 2)
+                {
+                    tripleHand.addCards(element.Value);
+                }
+            }
+
+            if (tripleHand.count() >= maxHandSize)
+            {
+                tripleHand = tripleHand.getHighestNCards(maxHandSize);
+            }
+
+            return (tripleHand, kickerHand);
+        }
 
         public (Hand, Hand) findFlush()
         {
-            if (cards.Count < 5)
+            if (cards.Count < maxHandSize)
             {
                 return (null, null);
             }
@@ -148,21 +196,21 @@ namespace PokerSolver
                         break;
                 }
             }
-            if (clubCards.count() >= 5)
+            if (clubCards.count() >= maxHandSize)
             {
-                flushHand = clubCards.getHighestNCards(5);
+                flushHand = clubCards.getHighestNCards(maxHandSize);
             } 
-            else if (diamondCards.count() >= 5)
+            else if (diamondCards.count() >= maxHandSize)
             {
-                flushHand = diamondCards.getHighestNCards(5);
+                flushHand = diamondCards.getHighestNCards(maxHandSize);
             }
-            else if (heartCards.count() >= 5)
+            else if (heartCards.count() >= maxHandSize)
             {
-                flushHand = heartCards.getHighestNCards(5);
+                flushHand = heartCards.getHighestNCards(maxHandSize);
             }
-            else if (spadeCards.count() >= 5)
+            else if (spadeCards.count() >= maxHandSize)
             {
-                flushHand = spadeCards.getHighestNCards(5);
+                flushHand = spadeCards.getHighestNCards(maxHandSize);
             }
             else
             {
@@ -173,7 +221,7 @@ namespace PokerSolver
         }
         public (Hand, Hand) findStraight()
         {
-            if (cards.Count < 5)
+            if (cards.Count < maxHandSize)
             {
                 return (null, null);
             }
@@ -185,7 +233,7 @@ namespace PokerSolver
 
             foreach (Card card in cards)
             {
-                if (straightHand.count() == 5)
+                if (straightHand.count() == maxHandSize)
                 {
                     break;
                 }
@@ -201,7 +249,7 @@ namespace PokerSolver
                 }
             }
 
-            if (straightHand.count() < 5)
+            if (straightHand.count() < maxHandSize)
             {
                 return (null, null);
             }
@@ -306,7 +354,7 @@ namespace PokerSolver
 
         public (Hand, Hand) findHighCard()
         {
-            Hand highestCards = getHighestNCards(5);
+            Hand highestCards = getHighestNCards(maxHandSize);
 
             Hand highCard = new Hand();
             highCard.addCard(highestCards.cards[0]);
