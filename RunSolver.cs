@@ -14,6 +14,8 @@ namespace PokerSolver
             Hand tens = valueCount[10];
             Console.WriteLine("There are {0} tens in the hand.", tens.count());
 
+            (Hand, Hand) tripleAndKickers = myCards.findTriple();
+
             (Hand, Hand) pairsAndKickers = myCards.findPair();
 
             (Hand, Hand) pairsAndKicker = myCards.findTwoPair();

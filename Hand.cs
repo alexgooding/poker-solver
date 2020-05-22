@@ -127,6 +127,36 @@ namespace PokerSolver
 
             return valueCount;
         }
+        public (Hand, Hand) findTriple()
+        {
+            Dictionary<int, Hand> valueCount = countByValue();
+
+            Hand tripleHand = new Hand();
+            Hand kickerHand = new Hand();
+
+            foreach (KeyValuePair<int, Hand> element in valueCount)
+            {
+                if (element.Value.count() == 3)
+                {
+                    tripleHand.addCards(element.Value);
+                    // Remove the element from valueCount to make calculating the kicker hand easier
+                    valueCount.Remove(element.Key);
+                }
+                else
+                {
+                    kickerHand.addCards(element.Value);
+                }
+            }
+
+            if (tripleHand.count() != 3)
+            {
+                return (null, null);
+            }
+            else
+            {
+                return (tripleHand, kickerHand.getHighestNCards(2));
+            }
+        }
 
         public (Hand, Hand) findTwoPair()
         {
