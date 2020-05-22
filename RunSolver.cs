@@ -10,6 +10,8 @@ namespace PokerSolver
         {
             Hand myCards = ParseCards.parseCards(args);
 
+            (Hand, Hand) straightFlush = myCards.findStraightFlush();
+
             (Hand, Hand) fourAndKicker = myCards.findFour();
 
             (Hand, Hand) fullHouse = myCards.findFullHouse();
