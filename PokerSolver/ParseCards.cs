@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace PokerSolver
 {
@@ -11,7 +9,7 @@ namespace PokerSolver
             Hand myCards = new Hand();
             foreach (string card in cards)
             {
-                myCards.addCard(parseCard(card));
+                myCards.AddCard(parseCard(card));
             }
 
             return myCards;

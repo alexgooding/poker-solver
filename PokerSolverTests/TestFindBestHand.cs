@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentAssertions.Common;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PokerSolver;
 
@@ -19,7 +16,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(14, "d"), new Card(13, "d"), new Card(12, "d"), new Card(11, "d"), new Card(10, "d") });
             Hand expectedKickerHand = null;
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
@@ -34,7 +31,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(6, "s"), new Card(5, "s"), new Card(4, "s"), new Card(3, "s"), new Card(2, "s") });
             Hand expectedKickerHand = null;
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
@@ -49,7 +46,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(4, "c"), new Card(4, "d"), new Card(4, "s"), new Card(4, "h") });
             Hand expectedKickerHand = new Hand(new List<Card> { new Card(13, "d") });
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
@@ -64,7 +61,7 @@ namespace PokerSolverTests
             Hand expectedMainHand1 = new Hand(new List<Card> { new Card(12, "d"), new Card(12, "s"), new Card(12, "c"), new Card(8, "s"), new Card(8, "d") });
             Hand expectedKickerHand1 = null;
 
-            (Hand, Hand) actual1 = testCards1.findBestHand();
+            (Hand, Hand) actual1 = testCards1.FindBestHand();
 
             string[] testCardsString2 = { "6s", "6d", "7c", "11d", "7h", "11s", "6h" };
             Hand testCards2 = ParseCards.parseCards(testCardsString2);
@@ -72,7 +69,7 @@ namespace PokerSolverTests
             Hand expectedMainHand2 = new Hand(new List<Card> { new Card(11, "d"), new Card(11, "s"), new Card(6, "s"), new Card(6, "d"), new Card(6, "h") });
             Hand expectedKickerHand2 = null;
 
-            (Hand, Hand) actual2 = testCards2.findBestHand();
+            (Hand, Hand) actual2 = testCards2.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand1, actual1.Item1), "Main hand 1 is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand1, actual1.Item2), "Kicker hand 1 is not as expected");
@@ -90,7 +87,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(9, "s"), new Card(7, "s"), new Card(6, "s"), new Card(3, "s"), new Card(2, "s") });
             Hand expectedKickerHand = null;
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
@@ -105,7 +102,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(12, "c"), new Card(11, "d"), new Card(10, "h"), new Card(9, "s"), new Card(8, "s") });
             Hand expectedKickerHand = null;
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
@@ -120,7 +117,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(8, "s"), new Card(8, "d"), new Card(8, "h") });
             Hand expectedKickerHand = new Hand(new List<Card> { new Card(13, "c"), new Card(12, "s") });
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand 1 is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand 1 is not as expected");
@@ -135,7 +132,7 @@ namespace PokerSolverTests
             Hand expectedMainHand1 = new Hand(new List<Card> { new Card(13, "c"), new Card(13, "h"), new Card(12, "d"), new Card(12, "s") });
             Hand expectedKickerHand1 = new Hand(new List<Card> { new Card(10, "c") });
 
-            (Hand, Hand) actual1 = testCards1.findBestHand();
+            (Hand, Hand) actual1 = testCards1.FindBestHand();
 
             string[] testCardsString2 = { "6s", "6d", "8c", "11d", "8h", "9s", "2h" };
             Hand testCards2 = ParseCards.parseCards(testCardsString2);
@@ -143,7 +140,7 @@ namespace PokerSolverTests
             Hand expectedMainHand2 = new Hand(new List<Card> { new Card(8, "c"), new Card(8, "h"), new Card(6, "s"), new Card(6, "d") });
             Hand expectedKickerHand2 = new Hand(new List<Card> { new Card(11, "d") });
 
-            (Hand, Hand) actual2 = testCards2.findBestHand();
+            (Hand, Hand) actual2 = testCards2.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand1, actual1.Item1), "Main hand 1 is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand1, actual1.Item2), "Kicker hand 1 is not as expected");
@@ -161,7 +158,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(6, "h"), new Card(6, "c") });
             Hand expectedKickerHand = new Hand(new List<Card> { new Card(14, "c"), new Card(12, "s"), new Card(5, "d") });
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand 1 is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand 1 is not as expected");
@@ -176,7 +173,7 @@ namespace PokerSolverTests
             Hand expectedMainHand = new Hand(new List<Card> { new Card(13, "c") });
             Hand expectedKickerHand = new Hand(new List<Card> { new Card(12, "s"), new Card(8, "c"), new Card(6, "h"), new Card(5, "d") });
 
-            (Hand, Hand) actual = testCards.findBestHand();
+            (Hand, Hand) actual = testCards.FindBestHand();
 
             Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand 1 is not as expected");
             Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand 1 is not as expected");

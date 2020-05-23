@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 
 namespace PokerSolver
 {
@@ -20,23 +18,23 @@ namespace PokerSolver
         {
             this.cards = new List<Card>();
         }
-        public List<Card> getCards()
+        public List<Card> GetCards()
         {
             return cards;
         }
-        public void addCard(Card card)     
+        public void AddCard(Card card)     
         {
             cards.Add(card);
             cards = cards.OrderByDescending(o => o.Value).ToList();
         }
-        public void addCards(Hand secondHand)
+        public void AddCards(Hand secondHand)
         {
             foreach (Card card in secondHand.cards)
             {
-                addCard(card);
+                AddCard(card);
             }
         }
-        public int count()
+        public int CardCount()
         {
             return cards.Count;
         }
@@ -50,14 +48,14 @@ namespace PokerSolver
             {
                 return false;
             }
-            else if (firstHand.count() != secondHand.count())
+            else if (firstHand.CardCount() != secondHand.CardCount())
             {
                 return false;
             }
             else
             {
-                List<Card> firstHandCards = firstHand.getCards();
-                List<Card> secondHandCards = secondHand.getCards();
+                List<Card> firstHandCards = firstHand.GetCards();
+                List<Card> secondHandCards = secondHand.GetCards();
                 for (int i = 0; i < firstHandCards.Count; i++)
                 {
                     if ((firstHandCards[i].Value != secondHandCards[i].Value) || firstHandCards[i].Suit != secondHandCards[i].Suit)
@@ -69,7 +67,7 @@ namespace PokerSolver
                 return true;
             }
         }
-        public Hand getHighestNCards(int n)
+        private Hand GetHighestNCards(int n)
         {
             Hand newHand = new Hand();
             for (int i = 0; i < n; i++)
@@ -77,7 +75,7 @@ namespace PokerSolver
                 // If the number of cards requested does not exist, just return as many that do
                 try
                 {
-                    newHand.addCard(cards[i]);
+                    newHand.AddCard(cards[i]);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -88,7 +86,7 @@ namespace PokerSolver
             return newHand;
         }
 
-        public Hand getLowestNCards(int n)
+        private Hand GetLowestNCards(int n)
         {
             Hand newHand = new Hand();
             for (int i = cards.Count-1; i >= cards.Count-n; i--)
@@ -96,7 +94,7 @@ namespace PokerSolver
                 // If the number of cards requested does not exist, just return as many that do
                 try
                 {
-                    newHand.addCard(cards[i]);
+                    newHand.AddCard(cards[i]);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -106,7 +104,7 @@ namespace PokerSolver
 
             return newHand;
         }
-        private Hand findCardsByValue(int value)
+        private Hand FindCardsByValue(int value)
         {
             Hand valueCards = new Hand();
 
@@ -114,13 +112,13 @@ namespace PokerSolver
             {
                 if (card.Value == value)
                 {
-                    valueCards.addCard(card);
+                    valueCards.AddCard(card);
                 }
             }
 
             return valueCards;
         }
-        private Dictionary<int, Hand> countByValue()
+        private Dictionary<int, Hand> CountByValue()
         {
             Dictionary<int, Hand> valueCount = new Dictionary<int, Hand>();
             foreach (Card card in cards)
@@ -128,63 +126,63 @@ namespace PokerSolver
                 try
                 {
                     valueCount.Add(card.Value, new Hand());
-                    valueCount[card.Value].addCard(card);
+                    valueCount[card.Value].AddCard(card);
                 }
                 catch (ArgumentException)
                 {
-                    valueCount[card.Value].addCard(card);
+                    valueCount[card.Value].AddCard(card);
                 }
             }
 
             return valueCount;
         }
 
-        private (Hand, Hand) findMatchingValueHands(int numberOfSameValueCards)
+        private (Hand, Hand) FindMatchingValueHands(int numberOfSameValueCards)
         {
             if (cards.Count < numberOfSameValueCards)
             {
                 return (null, null);
             }
 
-            Dictionary<int, Hand> valueCount = countByValue();
+            Dictionary<int, Hand> valueCount = CountByValue();
 
             Hand mainHand = new Hand();
             Hand kickerHand = new Hand();
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
-                if (element.Value.count() == numberOfSameValueCards)
+                if (element.Value.CardCount() == numberOfSameValueCards)
                 {
-                    mainHand.addCards(element.Value);
+                    mainHand.AddCards(element.Value);
                     // Remove the element from valueCount to make calculating the kicker hand easier
                     valueCount.Remove(element.Key);
                 }
                 else
                 {
-                    kickerHand.addCards(element.Value);
+                    kickerHand.AddCards(element.Value);
                 }
             }
 
-            if (mainHand.count() != numberOfSameValueCards)
+            if (mainHand.CardCount() != numberOfSameValueCards)
             {
                 return (null, null);
             }
             else
             {
-                return (mainHand, kickerHand.getHighestNCards(maxHandSize - numberOfSameValueCards));
+                return (mainHand, kickerHand.GetHighestNCards(maxHandSize - numberOfSameValueCards));
             }
         }
 
-        public (Hand, Hand) findRoyalFlush()
+        private (Hand, Hand) FindRoyalFlush()
         {
-            (Hand, Hand) straightFlushHand = findStraightFlush();
+            (Hand, Hand) straightFlushHand = FindStraightFlush();
             if (straightFlushHand.Item1 == null)
             {
                 return (null, null);
             }
             else
             {
-                if (straightFlushHand.Item1.findCardsByValue(14).count() == 1)
+                if (straightFlushHand.Item1.FindCardsByValue(14).CardCount() == 1)
                 {
                     return straightFlushHand;
                 }
@@ -195,26 +193,26 @@ namespace PokerSolver
             }
         }
 
-        public (Hand, Hand) findStraightFlush()
+        private (Hand, Hand) FindStraightFlush()
         {
-            (Hand, Hand) flushHand = findFlush();
+            (Hand, Hand) flushHand = FindFlush();
             if (flushHand.Item1 == null)
             {
                 return (null, null);
             }
             else
             {
-                return flushHand.Item1.findStraight();
+                return flushHand.Item1.FindStraight();
             }
         }
 
-        public (Hand, Hand) findFour()
+        private (Hand, Hand) FindFour()
         {
-            return findMatchingValueHands(4);
+            return FindMatchingValueHands(4);
         }
-        public (Hand, Hand) findFullHouse()
+        private (Hand, Hand) FindFullHouse()
         {
-            Dictionary<int, Hand> valueCount = countByValue();
+            Dictionary<int, Hand> valueCount = CountByValue();
 
             if (cards.Count < maxHandSize)
             {
@@ -228,37 +226,37 @@ namespace PokerSolver
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
-                if (element.Value.count() == 3)
+                if (element.Value.CardCount() == 3)
                 {
-                    tripleHand.addCards(element.Value);
+                    tripleHand.AddCards(element.Value);
                     // Remove the element from valueCount to make finding the pair easier
                     valueCount.Remove(element.Key);
                 }
             }
 
-            if (tripleHand.count() == 0)
+            if (tripleHand.CardCount() == 0)
             {
                 return (null, null);
             }
-            else if (tripleHand.count() == 6)
+            else if (tripleHand.CardCount() == 6)
             {
-                fullHouseHand = tripleHand.getHighestNCards(maxHandSize);
+                fullHouseHand = tripleHand.GetHighestNCards(maxHandSize);
             }
             else
             {
                 foreach (KeyValuePair<int, Hand> element in valueCount)
                 {
-                    if (element.Value.count() == 2)
+                    if (element.Value.CardCount() == 2)
                     {
-                        pairHand.addCards(element.Value);
+                        pairHand.AddCards(element.Value);
                     }
                 }
 
-                if (tripleHand.count() + pairHand.count() >= maxHandSize)
+                if (tripleHand.CardCount() + pairHand.CardCount() >= maxHandSize)
                 {
-                    pairHand = pairHand.getHighestNCards(2);
-                    fullHouseHand.addCards(tripleHand);
-                    fullHouseHand.addCards(pairHand);
+                    pairHand = pairHand.GetHighestNCards(2);
+                    fullHouseHand.AddCards(tripleHand);
+                    fullHouseHand.AddCards(pairHand);
                 }
                 else
                 {
@@ -269,7 +267,7 @@ namespace PokerSolver
             return (fullHouseHand, kickerHand);
         }
 
-        public (Hand, Hand) findFlush()
+        private (Hand, Hand) FindFlush()
         {
             if (cards.Count < maxHandSize)
             {
@@ -289,34 +287,34 @@ namespace PokerSolver
                 switch(card.Suit)
                 {
                     case "c":
-                        clubCards.addCard(card);
+                        clubCards.AddCard(card);
                         break;
                     case "d":
-                        diamondCards.addCard(card);
+                        diamondCards.AddCard(card);
                         break;
                     case "h":
-                        heartCards.addCard(card);
+                        heartCards.AddCard(card);
                         break;
                     case "s":
-                        spadeCards.addCard(card);
+                        spadeCards.AddCard(card);
                         break;
                 }
             }
-            if (clubCards.count() >= maxHandSize)
+            if (clubCards.CardCount() >= maxHandSize)
             {
-                flushHand = clubCards.getHighestNCards(maxHandSize);
+                flushHand = clubCards.GetHighestNCards(maxHandSize);
             } 
-            else if (diamondCards.count() >= maxHandSize)
+            else if (diamondCards.CardCount() >= maxHandSize)
             {
-                flushHand = diamondCards.getHighestNCards(maxHandSize);
+                flushHand = diamondCards.GetHighestNCards(maxHandSize);
             }
-            else if (heartCards.count() >= maxHandSize)
+            else if (heartCards.CardCount() >= maxHandSize)
             {
-                flushHand = heartCards.getHighestNCards(maxHandSize);
+                flushHand = heartCards.GetHighestNCards(maxHandSize);
             }
-            else if (spadeCards.count() >= maxHandSize)
+            else if (spadeCards.CardCount() >= maxHandSize)
             {
-                flushHand = spadeCards.getHighestNCards(maxHandSize);
+                flushHand = spadeCards.GetHighestNCards(maxHandSize);
             }
             else
             {
@@ -325,7 +323,7 @@ namespace PokerSolver
 
             return (flushHand, kickerHand);
         }
-        public (Hand, Hand) findStraight()
+        private (Hand, Hand) FindStraight()
         {
             if (cards.Count < maxHandSize)
             {
@@ -339,23 +337,23 @@ namespace PokerSolver
 
             foreach (Card card in cards)
             {
-                if (straightHand.count() == maxHandSize)
+                if (straightHand.CardCount() == maxHandSize)
                 {
                     break;
                 }
                 else if (card.Value == previousValue - 1)
                 {
-                    straightHand.addCard(card);
+                    straightHand.AddCard(card);
                     previousValue -= 1;
                 }
                 else if (card.Value < previousValue - 1) {
                     straightHand = new Hand();
-                    straightHand.addCard(card);
+                    straightHand.AddCard(card);
                     previousValue = card.Value;
                 }
             }
 
-            if (straightHand.count() < maxHandSize)
+            if (straightHand.CardCount() < maxHandSize)
             {
                 return (null, null);
             }
@@ -365,75 +363,75 @@ namespace PokerSolver
             }
         }
 
-        public (Hand, Hand) findTriple()
+        private (Hand, Hand) FindTriple()
         {
-            return findMatchingValueHands(3);
+            return FindMatchingValueHands(3);
         }
 
-        public (Hand, Hand) findTwoPair()
+        private (Hand, Hand) FindTwoPair()
         {
             if (cards.Count < 4)
             {
                 return (null, null);
             }
 
-            Dictionary<int, Hand> valueCount = countByValue();
+            Dictionary<int, Hand> valueCount = CountByValue();
 
             Hand mainHand = new Hand();
             Hand kickerHand = new Hand();
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
-                if (element.Value.count() == 2)
+                if (element.Value.CardCount() == 2)
                 {
-                    mainHand.addCards(element.Value);
+                    mainHand.AddCards(element.Value);
                     // Remove the element from valueCount to make calculating the kicker hand easier
                     valueCount.Remove(element.Key);
                 }
                 else
                 {
-                    kickerHand.addCards(element.Value);
+                    kickerHand.AddCards(element.Value);
                 }
             }
 
-            if (mainHand.count() < 4)
+            if (mainHand.CardCount() < 4)
             {
                 return (null, null);
             }
-            else if (mainHand.count() == 4)
+            else if (mainHand.CardCount() == 4)
             {
-                return (mainHand, kickerHand.getHighestNCards(1));
+                return (mainHand, kickerHand.GetHighestNCards(1));
             }
             else
             {
-                kickerHand.addCards(getLowestNCards(mainHand.count() - 4));
-                mainHand = mainHand.getHighestNCards(4);
+                kickerHand.AddCards(GetLowestNCards(mainHand.CardCount() - 4));
+                mainHand = mainHand.GetHighestNCards(4);
 
-                return (mainHand, kickerHand.getHighestNCards(1));
+                return (mainHand, kickerHand.GetHighestNCards(1));
             }
         }
 
-        public (Hand, Hand) findPair()
+        private (Hand, Hand) FindPair()
         {
-            return findMatchingValueHands(2);
+            return FindMatchingValueHands(2);
         }
 
-        public (Hand, Hand) findHighCard()
+        private (Hand, Hand) FindHighCard()
         {
-            Hand highestCards = getHighestNCards(maxHandSize);
+            Hand highestCards = GetHighestNCards(maxHandSize);
 
             Hand highCard = new Hand();
-            highCard.addCard(highestCards.cards[0]);
+            highCard.AddCard(highestCards.cards[0]);
             highestCards.cards.RemoveAt(0);
             Hand kickerHand = new Hand(highestCards.cards);
 
             return (highCard, kickerHand);
         }
 
-        public (Hand, Hand) findBestHand()
+        public (Hand, Hand) FindBestHand()
         {
-            var handCheckingMethods = new List<Func<(Hand, Hand)>> { findRoyalFlush, findStraightFlush, findFour, 
-                findFullHouse, findFlush, findStraight, findTriple, findTwoPair, findPair, findHighCard };
+            var handCheckingMethods = new List<Func<(Hand, Hand)>> { FindRoyalFlush, FindStraightFlush, FindFour, 
+                FindFullHouse, FindFlush, FindStraight, FindTriple, FindTwoPair, FindPair, FindHighCard };
 
             (Hand, Hand) bestHand = (null, null);
 
