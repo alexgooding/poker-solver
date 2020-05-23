@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PokerSolver
 {
-    class Hand : List<Card>
+    public class Hand : List<Card>
     {
         public const int maxCardsInPlay = 7;
         public const int maxHandSize = 5;
@@ -39,6 +39,35 @@ namespace PokerSolver
         public int count()
         {
             return cards.Count;
+        }
+        public static bool IsEqual(Hand firstHand, Hand secondHand)
+        {
+            if (firstHand == null && secondHand == null)
+            {
+                return true;
+            }
+            else if ((firstHand == null && secondHand != null) || (secondHand == null && firstHand != null))
+            {
+                return false;
+            }
+            else if (firstHand.count() != secondHand.count())
+            {
+                return false;
+            }
+            else
+            {
+                List<Card> firstHandCards = firstHand.getCards();
+                List<Card> secondHandCards = secondHand.getCards();
+                for (int i = 0; i < firstHandCards.Count; i++)
+                {
+                    if ((firstHandCards[i].Value != secondHandCards[i].Value) || firstHandCards[i].Suit != secondHandCards[i].Suit)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
         public Hand getHighestNCards(int n)
         {
@@ -211,25 +240,31 @@ namespace PokerSolver
             {
                 return (null, null);
             }
-            if (tripleHand.count() == 6)
+            else if (tripleHand.count() == 6)
             {
                 fullHouseHand = tripleHand.getHighestNCards(maxHandSize);
             }
-
-            foreach (KeyValuePair<int, Hand> element in valueCount)
+            else
             {
-                if (element.Value.count() == 2)
+                foreach (KeyValuePair<int, Hand> element in valueCount)
                 {
-                    pairHand.addCards(element.Value);
+                    if (element.Value.count() == 2)
+                    {
+                        pairHand.addCards(element.Value);
+                    }
                 }
-            }
 
-            if (tripleHand.count() + pairHand.count() >= maxHandSize)
-            {
-                pairHand = pairHand.getHighestNCards(2);
-                fullHouseHand.addCards(tripleHand);
-                fullHouseHand.addCards(pairHand);
-            }
+                if (tripleHand.count() + pairHand.count() >= maxHandSize)
+                {
+                    pairHand = pairHand.getHighestNCards(2);
+                    fullHouseHand.addCards(tripleHand);
+                    fullHouseHand.addCards(pairHand);
+                }
+                else
+                {
+                    return (null, null);
+                }
+            }   
 
             return (fullHouseHand, kickerHand);
         }

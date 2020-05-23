@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace PokerSolver
 {
-    class ParseCards
+    public class ParseCards
     {
         public static Hand parseCards(string[] cards)
         {
