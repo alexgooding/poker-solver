@@ -96,16 +96,27 @@ namespace PokerSolverTests
         [TestMethod]
         public void testFindBestHandStraight()
         {
-            string[] testCardsString = { "10h", "14d", "8s", "11d", "7s", "9s", "12c" };
-            Hand testCards = ParseCards.parseCards(testCardsString);
+            string[] testCardsString1 = { "10h", "14d", "8s", "11d", "7s", "9s", "12c" };
+            Hand testCards1 = ParseCards.parseCards(testCardsString1);
 
-            Hand expectedMainHand = new Hand(new List<Card> { new Card(12, "c"), new Card(11, "d"), new Card(10, "h"), new Card(9, "s"), new Card(8, "s") });
-            Hand expectedKickerHand = null;
+            Hand expectedMainHand1 = new Hand(new List<Card> { new Card(12, "c"), new Card(11, "d"), new Card(10, "h"), new Card(9, "s"), new Card(8, "s") });
+            Hand expectedKickerHand1 = null;
 
-            (Hand, Hand) actual = testCards.FindBestHand();
+            (Hand, Hand) actual1 = testCards1.FindBestHand();
 
-            Assert.IsTrue(Hand.IsEqual(expectedMainHand, actual.Item1), "Main hand is not as expected");
-            Assert.IsTrue(Hand.IsEqual(expectedKickerHand, actual.Item2), "Kicker hand is not as expected");
+            string[] testCardsString2 = { "2h", "14d", "8s", "5d", "7s", "3s", "4c" };
+            Hand testCards2 = ParseCards.parseCards(testCardsString2);
+
+            Hand expectedMainHand2 = new Hand(new List<Card> { new Card(5, "d"), new Card(4, "c"), new Card(3, "s"), new Card(2, "h"), new Card(1, "d") });
+            Hand expectedKickerHand2 = null;
+
+            (Hand, Hand) actual2 = testCards2.FindBestHand();
+
+            Assert.IsTrue(Hand.IsEqual(expectedMainHand1, actual1.Item1), "Main hand is not as expected");
+            Assert.IsTrue(Hand.IsEqual(expectedKickerHand1, actual1.Item2), "Kicker hand is not as expected");
+
+            Assert.IsTrue(Hand.IsEqual(expectedMainHand2, actual2.Item1), "Main hand is not as expected");
+            Assert.IsTrue(Hand.IsEqual(expectedKickerHand2, actual2.Item2), "Kicker hand is not as expected");
         }
 
         [TestMethod]

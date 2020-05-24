@@ -335,6 +335,15 @@ namespace PokerSolver
 
             int previousValue = cards[0].Value + 1;
 
+            // Treat aces as low and high
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (cards[i].Value == 14)
+                {
+                    cards.Add(new Card(1, cards[i].Suit));
+                }
+            }
+            
             foreach (Card card in cards)
             {
                 if (straightHand.CardCount() == maxHandSize)
@@ -350,6 +359,15 @@ namespace PokerSolver
                     straightHand = new Hand();
                     straightHand.AddCard(card);
                     previousValue = card.Value;
+                }
+            }
+
+            // Remove any ace lows added to cards
+            for (int i = cards.Count - 1; i >= 0; i--)
+            {
+                if (cards[i].Value == 1)
+                {
+                    cards.RemoveAt(i);
                 }
             }
 
