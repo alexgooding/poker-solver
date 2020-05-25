@@ -137,11 +137,11 @@ namespace PokerSolver
             return valueCount;
         }
 
-        private (Hand, Hand) FindMatchingValueHands(int numberOfSameValueCards)
+        private SortedHand FindMatchingValueHands(int numberOfSameValueCards)
         {
             if (cards.Count < numberOfSameValueCards)
             {
-                return (null, null);
+                return new SortedHand();
             }
 
             Dictionary<int, Hand> valueCount = CountByValue();
@@ -165,64 +165,62 @@ namespace PokerSolver
 
             if (mainHand.CardCount() != numberOfSameValueCards)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else
             {
-                return (mainHand, kickerHand.GetHighestNCards(maxHandSize - numberOfSameValueCards));
+                return new SortedHand(mainHand, kickerHand.GetHighestNCards(maxHandSize - numberOfSameValueCards));
             }
         }
 
-        private (Hand, Hand) FindRoyalFlush()
+        private SortedHand FindRoyalFlush()
         {
-            (Hand, Hand) straightFlushHand = FindStraightFlush();
-            if (straightFlushHand.Item1 == null)
+            SortedHand straightFlushHand = FindStraightFlush();
+            if (straightFlushHand.MainHand == null)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else
             {
-                if (straightFlushHand.Item1.FindCardsByValue(14).CardCount() == 1)
+                if (straightFlushHand.MainHand.FindCardsByValue(14).CardCount() == 1)
                 {
                     return straightFlushHand;
                 }
                 else
                 {
-                    return (null, null);
+                    return new SortedHand();
                 }
             }
         }
 
-        private (Hand, Hand) FindStraightFlush()
+        private SortedHand FindStraightFlush()
         {
-            (Hand, Hand) flushHand = FindFlush();
-            if (flushHand.Item1 == null)
+            SortedHand flushHand = FindFlush();
+            if (flushHand.MainHand == null)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else
             {
-                return flushHand.Item1.FindStraight();
+                return flushHand.MainHand.FindStraight();
             }
         }
 
-        private (Hand, Hand) FindFour()
+        private SortedHand FindFour()
         {
             return FindMatchingValueHands(4);
         }
-        private (Hand, Hand) FindFullHouse()
+        private SortedHand FindFullHouse()
         {
             Dictionary<int, Hand> valueCount = CountByValue();
 
             if (cards.Count < maxHandSize)
             {
-                return (null, null);
+                return new SortedHand();
             }
 
             Hand tripleHand = new Hand();
             Hand pairHand = new Hand();
-            Hand fullHouseHand = new Hand();
-            Hand kickerHand = null;
 
             foreach (KeyValuePair<int, Hand> element in valueCount)
             {
@@ -236,7 +234,7 @@ namespace PokerSolver
 
             if (tripleHand.CardCount() == 0)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else if (tripleHand.CardCount() == 6)
             {
@@ -259,19 +257,19 @@ namespace PokerSolver
                 }
                 else
                 {
-                    return (null, null);
+                    return new SortedHand();
                 }
             }   
 
             // Return pair hand in place of kicker hand for comparison purposes
-            return (tripleHand, pairHand);
+            return new SortedHand(tripleHand, pairHand);
         }
 
-        private (Hand, Hand) FindFlush()
+        private SortedHand FindFlush()
         {
             if (cards.Count < maxHandSize)
             {
-                return (null, null);
+                return new SortedHand();
             }
 
             Hand clubCards = new Hand();
@@ -280,7 +278,6 @@ namespace PokerSolver
             Hand spadeCards = new Hand();
 
             Hand flushHand = new Hand();
-            Hand kickerHand = null;
 
             foreach (Card card in cards)
             {
@@ -318,16 +315,16 @@ namespace PokerSolver
             }
             else
             {
-                return (null, kickerHand);
+                return new SortedHand();
             }
 
-            return (flushHand, kickerHand);
+            return new SortedHand(flushHand, null);
         }
-        private (Hand, Hand) FindStraight()
+        private SortedHand FindStraight()
         {
             if (cards.Count < maxHandSize)
             {
-                return (null, null);
+                return new SortedHand();
             }
 
             Hand straightHand = new Hand();
@@ -373,24 +370,24 @@ namespace PokerSolver
 
             if (straightHand.CardCount() < maxHandSize)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else
             {
-                return (straightHand, kickerHand);
+                return new SortedHand(straightHand, kickerHand);
             }
         }
 
-        private (Hand, Hand) FindTriple()
+        private SortedHand FindTriple()
         {
             return FindMatchingValueHands(3);
         }
 
-        private (Hand, Hand) FindTwoPair()
+        private SortedHand FindTwoPair()
         {
             if (cards.Count < 4)
             {
-                return (null, null);
+                return new SortedHand();
             }
 
             Dictionary<int, Hand> valueCount = CountByValue();
@@ -414,27 +411,27 @@ namespace PokerSolver
 
             if (mainHand.CardCount() < 4)
             {
-                return (null, null);
+                return new SortedHand();
             }
             else if (mainHand.CardCount() == 4)
             {
-                return (mainHand, kickerHand.GetHighestNCards(1));
+                return new SortedHand(mainHand, kickerHand.GetHighestNCards(1));
             }
             else
             {
                 kickerHand.AddCards(GetLowestNCards(mainHand.CardCount() - 4));
                 mainHand = mainHand.GetHighestNCards(4);
 
-                return (mainHand, kickerHand.GetHighestNCards(1));
+                return new SortedHand(mainHand, kickerHand.GetHighestNCards(1));
             }
         }
 
-        private (Hand, Hand) FindPair()
+        private SortedHand FindPair()
         {
             return FindMatchingValueHands(2);
         }
 
-        private (Hand, Hand) FindHighCard()
+        private SortedHand FindHighCard()
         {
             Hand highestCards = GetHighestNCards(maxHandSize);
 
@@ -443,20 +440,20 @@ namespace PokerSolver
             highestCards.cards.RemoveAt(0);
             Hand kickerHand = new Hand(highestCards.cards);
 
-            return (highCard, kickerHand);
+            return new SortedHand(highCard, kickerHand);
         }
 
-        public (Hand, Hand) FindBestHand()
+        public SortedHand FindBestHand()
         {
-            var handCheckingMethods = new List<Func<(Hand, Hand)>> { FindRoyalFlush, FindStraightFlush, FindFour, 
+            var handCheckingMethods = new List<Func<SortedHand>> { FindRoyalFlush, FindStraightFlush, FindFour, 
                 FindFullHouse, FindFlush, FindStraight, FindTriple, FindTwoPair, FindPair, FindHighCard };
 
-            (Hand, Hand) bestHand = (null, null);
+            SortedHand bestHand = new SortedHand();
 
             foreach (var method in handCheckingMethods)
             {
                 bestHand = method();
-                if (bestHand.Item1 != null)
+                if (bestHand.MainHand != null)
                 {
                     break;
                 }
@@ -464,39 +461,5 @@ namespace PokerSolver
 
             return bestHand;
         }
-
-        public static bool? IsFirstHandBetterThanSecondHand((Hand, Hand) firstHand, (Hand, Hand) secondHand)
-        // Compare the main hand and kicker hand of two hands of the same type (e.g. flush, pair, etc...)
-        {
-            for (int i = 0; i < firstHand.Item1.CardCount(); i++)
-            {
-                if (firstHand.Item1.GetCards()[i].Value > secondHand.Item1.GetCards()[i].Value)
-                {
-                    return true;
-                }
-                else if (firstHand.Item1.GetCards()[i].Value < secondHand.Item1.GetCards()[i].Value)
-                {
-                    return false;
-                }
-            }
-
-            if (firstHand.Item2 != null)
-            {
-                for (int i = 0; i < firstHand.Item2.CardCount(); i++)
-                {
-                    if (firstHand.Item2.GetCards()[i].Value > secondHand.Item2.GetCards()[i].Value)
-                    {
-                        return true;
-                    }
-                    else if (firstHand.Item2.GetCards()[i].Value < secondHand.Item2.GetCards()[i].Value)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return null;
-        }
-
     }
 }

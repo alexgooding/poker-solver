@@ -8,18 +8,18 @@ namespace PokerSolver
         {
             Hand myCards = ParseCards.parseCards(args);
 
-            (Hand, Hand) bestHand = myCards.FindBestHand();
+            SortedHand bestHand = myCards.FindBestHand();
 
             Console.WriteLine("The best hand found is:");
             Console.Write("( ");
-            foreach (Card card in bestHand.Item1.GetCards())
+            foreach (Card card in bestHand.MainHand.GetCards())
             {
                 Console.Write("{0}{1} ", card.Value, card.Suit); 
             }
             Console.Write("), ( ");
-            if (bestHand.Item2 != null)
+            if (bestHand.KickerHand != null)
             {
-                foreach (Card card in bestHand.Item2.GetCards())
+                foreach (Card card in bestHand.KickerHand.GetCards())
                 {
                     Console.Write("{0}{1} ", card.Value, card.Suit);
                 }
