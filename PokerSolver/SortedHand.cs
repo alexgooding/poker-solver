@@ -1,4 +1,6 @@
-﻿namespace PokerSolver
+﻿using System;
+
+namespace PokerSolver
 {
     public class SortedHand
     {
@@ -46,6 +48,31 @@
             }
 
             return null;
+        }
+
+        public void PrintSortedHand()
+        {
+            string sortedHandString = "(";
+            if (MainHand != null && MainHand.CardCount() != 0)
+            {
+                foreach (Card card in MainHand.GetCards())
+                {
+                    sortedHandString += String.Format("{0}{1}, ", card.Value, card.Suit);
+                }
+                sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
+            }         
+            sortedHandString += "), (";
+            if (KickerHand != null && KickerHand.CardCount() != 0)
+            {
+                foreach (Card card in KickerHand.GetCards())
+                {
+                    sortedHandString += String.Format("{0}{1}, ", card.Value, card.Suit);
+                }
+                sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
+            }
+            sortedHandString += ")";
+
+            Console.WriteLine(sortedHandString);
         }
     }
    
