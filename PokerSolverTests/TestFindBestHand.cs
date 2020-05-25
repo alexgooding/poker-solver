@@ -8,7 +8,7 @@ namespace PokerSolverTests
     public class TestFindBestHand
     {
         [TestMethod]
-        public void testFindBestHandRoyalFlush()
+        public void TestFindBestHandRoyalFlush()
         {
             string[] testCardsString = { "6h", "13d", "10d", "11d", "3s", "14d", "12d" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -23,7 +23,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandStraightFlush()
+        public void TestFindBestHandStraightFlush()
         {
             string[] testCardsString = { "6s", "13d", "5s", "11d", "3s", "4s", "2s" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -38,7 +38,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandFour()
+        public void TestFindBestHandFour()
         {
             string[] testCardsString = { "4c", "13d", "4d", "11h", "11d", "4s", "4h" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -53,21 +53,21 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandFullHouse()
+        public void TestFindBestHandFullHouse()
         {
             string[] testCardsString1 = { "8s", "8d", "13c", "12d", "8h", "12s", "12c" };
             Hand testCards1 = ParseCards.parseCards(testCardsString1);
 
-            Hand expectedMainHand1 = new Hand(new List<Card> { new Card(12, "d"), new Card(12, "s"), new Card(12, "c"), new Card(8, "s"), new Card(8, "d") });
-            Hand expectedKickerHand1 = null;
+            Hand expectedMainHand1 = new Hand(new List<Card> { new Card(12, "d"), new Card(12, "s"), new Card(12, "c") });
+            Hand expectedKickerHand1 = new Hand(new List<Card> { new Card(8, "s"), new Card(8, "d") });
 
             (Hand, Hand) actual1 = testCards1.FindBestHand();
 
             string[] testCardsString2 = { "6s", "6d", "7c", "11d", "7h", "11s", "6h" };
             Hand testCards2 = ParseCards.parseCards(testCardsString2);
 
-            Hand expectedMainHand2 = new Hand(new List<Card> { new Card(11, "d"), new Card(11, "s"), new Card(6, "s"), new Card(6, "d"), new Card(6, "h") });
-            Hand expectedKickerHand2 = null;
+            Hand expectedMainHand2 = new Hand(new List<Card> { new Card(6, "s"), new Card(6, "d"), new Card(6, "h") });
+            Hand expectedKickerHand2 = new Hand(new List<Card> { new Card(11, "d"), new Card(11, "s") });
 
             (Hand, Hand) actual2 = testCards2.FindBestHand();
 
@@ -79,7 +79,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandFlush()
+        public void TestFindBestHandFlush()
         {
             string[] testCardsString = { "6s", "13d", "7s", "11d", "3s", "9s", "2s" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -94,7 +94,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandStraight()
+        public void TestFindBestHandStraight()
         {
             string[] testCardsString1 = { "10h", "14d", "8s", "11d", "7s", "9s", "12c" };
             Hand testCards1 = ParseCards.parseCards(testCardsString1);
@@ -120,7 +120,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandTriple()
+        public void TestFindBestHandTriple()
         {
             string[] testCardsString = { "8s", "8d", "13c", "2d", "8h", "12s", "5c" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -135,7 +135,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandTwoPair()
+        public void TestFindBestHandTwoPair()
         {
             string[] testCardsString1 = { "8s", "8d", "13c", "12d", "13h", "12s", "10c" };
             Hand testCards1 = ParseCards.parseCards(testCardsString1);
@@ -161,7 +161,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandPair()
+        public void TestFindBestHandPair()
         {
             string[] testCardsString = { "4s", "5d", "14c", "2d", "6h", "12s", "6c" };
             Hand testCards = ParseCards.parseCards(testCardsString);
@@ -176,7 +176,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void testFindBestHandHighCard()
+        public void TestFindBestHandHighCard()
         {
             string[] testCardsString = { "4s", "5d", "13c", "2d", "6h", "12s", "8c" };
             Hand testCards = ParseCards.parseCards(testCardsString);

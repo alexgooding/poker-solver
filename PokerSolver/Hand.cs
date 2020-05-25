@@ -240,7 +240,8 @@ namespace PokerSolver
             }
             else if (tripleHand.CardCount() == 6)
             {
-                fullHouseHand = tripleHand.GetHighestNCards(maxHandSize);
+                pairHand.AddCards(new Hand(tripleHand.GetCards().GetRange(3, 2)));
+                tripleHand = tripleHand.GetHighestNCards(3);
             }
             else
             {
@@ -255,8 +256,6 @@ namespace PokerSolver
                 if (tripleHand.CardCount() + pairHand.CardCount() >= maxHandSize)
                 {
                     pairHand = pairHand.GetHighestNCards(2);
-                    fullHouseHand.AddCards(tripleHand);
-                    fullHouseHand.AddCards(pairHand);
                 }
                 else
                 {
@@ -264,7 +263,8 @@ namespace PokerSolver
                 }
             }   
 
-            return (fullHouseHand, kickerHand);
+            // Return pair hand in place of kicker hand for comparison purposes
+            return (tripleHand, pairHand);
         }
 
         private (Hand, Hand) FindFlush()
@@ -463,6 +463,39 @@ namespace PokerSolver
             }
 
             return bestHand;
+        }
+
+        public static bool? IsFirstHandBetterThanSecondHand((Hand, Hand) firstHand, (Hand, Hand) secondHand)
+        // Compare the main hand and kicker hand of two hands of the same type (e.g. flush, pair, etc...)
+        {
+            for (int i = 0; i < firstHand.Item1.CardCount(); i++)
+            {
+                if (firstHand.Item1.GetCards()[i].Value > secondHand.Item1.GetCards()[i].Value)
+                {
+                    return true;
+                }
+                else if (firstHand.Item1.GetCards()[i].Value < secondHand.Item1.GetCards()[i].Value)
+                {
+                    return false;
+                }
+            }
+
+            if (firstHand.Item2 != null)
+            {
+                for (int i = 0; i < firstHand.Item2.CardCount(); i++)
+                {
+                    if (firstHand.Item2.GetCards()[i].Value > secondHand.Item2.GetCards()[i].Value)
+                    {
+                        return true;
+                    }
+                    else if (firstHand.Item2.GetCards()[i].Value < secondHand.Item2.GetCards()[i].Value)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return null;
         }
 
     }
