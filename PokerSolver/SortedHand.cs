@@ -1,4 +1,5 @@
 ﻿using System;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -57,7 +58,7 @@ namespace PokerSolver
             {
                 foreach (Card card in MainHand.GetCards())
                 {
-                    sortedHandString += String.Format("{0}{1}, ", card.Value, card.Suit);
+                    sortedHandString += String.Format("{0}{1}, ", card.Value, Constants.FriendlySuitNames[card.Suit]);
                 }
                 sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
             }         
@@ -66,7 +67,7 @@ namespace PokerSolver
             {
                 foreach (Card card in KickerHand.GetCards())
                 {
-                    sortedHandString += String.Format("{0}{1}, ", card.Value, card.Suit);
+                    sortedHandString += String.Format("{0}{1}, ", card.Value, Constants.FriendlySuitNames[card.Suit]);
                 }
                 sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
             }

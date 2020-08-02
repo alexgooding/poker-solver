@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -283,16 +284,16 @@ namespace PokerSolver
             {
                 switch(card.Suit)
                 {
-                    case "c":
+                    case Suit.Clubs:
                         clubCards.AddCard(card);
                         break;
-                    case "d":
+                    case Suit.Diamonds:
                         diamondCards.AddCard(card);
                         break;
-                    case "h":
+                    case Suit.Hearts:
                         heartCards.AddCard(card);
                         break;
-                    case "s":
+                    case Suit.Spades:
                         spadeCards.AddCard(card);
                         break;
                 }

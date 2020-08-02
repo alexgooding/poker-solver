@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -9,30 +11,74 @@ namespace PokerSolver
             Hand myCards = new Hand();
             foreach (string card in cards)
             {
-                myCards.AddCard(parseCard(card));
+                try
+                {
+                    myCards.AddCard(ParseCard(card));
+                }
+                catch (Exception)
+                {
+                    throw new Exception();
+                }
             }
 
             return myCards;
         }
 
-        private static Card parseCard(string card)
+        private static Card ParseCard(string card)
         {
-            var value = "";
-            var suit = "";
-            foreach (char c in card)
+            try
             {
-                if (Char.IsDigit(c))
+                var value = "";
+                Suit suit = Suit.Hearts;
+                foreach (char c in card)
                 {
-                    value += c;
+                    if (Char.IsDigit(c))
+                    {
+                        value += c;
+                    }
+                    else
+                    {
+                        switch (c)
+                        {
+                            case 'H':
+                            case 'h':
+                            case '♥':
+                                suit = Suit.Hearts;
+                                break;
+                            case 'D':
+                            case 'd':
+                            case '♦':
+                                suit = Suit.Diamonds;
+                                break;
+                            case 'S':
+                            case 's':
+                            case '♠':
+                                suit = Suit.Spades;
+                                break;
+                            case 'C':
+                            case 'c':
+                            case '♣':
+                                suit = Suit.Clubs;
+                                break;
+                            default:
+                                throw new ArgumentException();
+                        }
+                    }
                 }
-                else
-                {
-                    suit += c;
-                }
-            }
-            Card parsedCard = new Card(int.Parse(value), suit);
+                Card parsedCard = new Card(int.Parse(value), suit);
 
-            return parsedCard;
+                return parsedCard;
+            }
+            catch (ValidationException)
+            {
+                Console.WriteLine("Invalid card value entered.");
+                throw new Exception();
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Invalid suit entered.");
+                throw new Exception();
+            }
         }
     }
 }
