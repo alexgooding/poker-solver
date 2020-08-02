@@ -7,24 +7,29 @@ namespace PokerSolver
         static void Main(string[] args)
         {
             Hand myCards = ParseCards.parseCards(args);
+            SortedHand myBestHand = myCards.FindBestHand();
 
-            (Hand, Hand) bestHand = myCards.FindBestHand();
+            Console.WriteLine("My best hand is:");
+            myBestHand.PrintSortedHand();
 
-            Console.WriteLine("The best hand found is:");
-            Console.Write("( ");
-            foreach (Card card in bestHand.Item1.GetCards())
+            Hand theirCards = ParseCards.parseCards(new string[] { "11h", "10h", "9h", "8h", "7h", "10d", "9d" });
+            SortedHand theirBestHand = theirCards.FindBestHand();
+
+            Console.WriteLine("Their best hand is:");
+            theirBestHand.PrintSortedHand();
+
+            var myHandBetterThanTheirs = myBestHand.IsBetterThanHand(theirBestHand);
+            if (myHandBetterThanTheirs == null)
             {
-                Console.Write("{0}{1} ", card.Value, card.Suit); 
+                Console.WriteLine("Our hands are equally good");
             }
-            Console.Write("), ( ");
-            if (bestHand.Item2 != null)
+            else if (myHandBetterThanTheirs == true) {
+                Console.WriteLine("My hand is better than theirs");
+            }
+            else
             {
-                foreach (Card card in bestHand.Item2.GetCards())
-                {
-                    Console.Write("{0}{1} ", card.Value, card.Suit);
-                }
+                Console.WriteLine("Their hand is better than mine");
             }
-            Console.Write(")");
         }
     }
 }
