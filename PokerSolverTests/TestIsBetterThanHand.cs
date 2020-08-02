@@ -61,7 +61,7 @@ namespace PokerSolverTests
         }
 
         [TestMethod]
-        public void TestIsBetterThanHanddPair()
+        public void TestIsBetterThanHandPair()
         {
             string[] testCardsString1 = { "10h", "12h", "2s", "9h", "3d", "11h", "3c" };
             Hand testCards1 = ParseCards.parseCards(testCardsString1);
