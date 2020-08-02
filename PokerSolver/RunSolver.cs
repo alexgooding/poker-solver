@@ -11,6 +11,8 @@ namespace PokerSolver
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            Hand[] twoCardHands = Hand.GenerateAllTwoCardHands();
+
             var successfulInput = false;
             myHand = new Hand();
             communityHand = new Hand();
