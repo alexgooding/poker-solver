@@ -4,32 +4,49 @@ namespace PokerSolver
 {
     class RunSolver
     {
-        static void Main(string[] args)
+        Hand myHand;
+        Hand communityHand;
+
+        public void runMainWorkflow(int numberOfPlayers)
         {
-            Hand myCards = ParseCards.parseCards(args);
-            SortedHand myBestHand = myCards.FindBestHand();
+            myHand = new Hand();
+            communityHand = new Hand();
 
-            Console.WriteLine("My best hand is:");
-            myBestHand.PrintSortedHand();
+            string[] line;
+            Console.WriteLine("Enter the two cards in your hand");
+            line = Console.ReadLine().Split(null);
 
-            Hand theirCards = ParseCards.parseCards(new string[] { "11h", "10h", "9h", "8h", "7h", "10d", "9d" });
-            SortedHand theirBestHand = theirCards.FindBestHand();
+            myHand.AddCards(ParseCards.parseCards(line));
 
-            Console.WriteLine("Their best hand is:");
-            theirBestHand.PrintSortedHand();
+            Console.WriteLine("Your best hand is:");
+            myHand.FindBestHand().PrintSortedHand();
 
-            var myHandBetterThanTheirs = myBestHand.IsBetterThanHand(theirBestHand);
-            if (myHandBetterThanTheirs == null)
-            {
-                Console.WriteLine("Our hands are equally good");
-            }
-            else if (myHandBetterThanTheirs == true) {
-                Console.WriteLine("My hand is better than theirs");
-            }
-            else
-            {
-                Console.WriteLine("Their hand is better than mine");
-            }
+            Console.WriteLine("Enter the first three community cards");
+            line = Console.ReadLine().Split(null);
+
+            myHand.AddCards(ParseCards.parseCards(line));
+            communityHand.AddCards(ParseCards.parseCards(line));
+
+            Console.WriteLine("Your best hand is:");
+            myHand.FindBestHand().PrintSortedHand();
+
+            Console.WriteLine("Enter the fourth community card");
+            line = Console.ReadLine().Split(null);
+
+            myHand.AddCards(ParseCards.parseCards(line));
+            communityHand.AddCards(ParseCards.parseCards(line));
+
+            Console.WriteLine("Your best hand is:");
+            myHand.FindBestHand().PrintSortedHand();
+
+            Console.WriteLine("Enter the fifth community card");
+            line = Console.ReadLine().Split(null);
+
+            myHand.AddCards(ParseCards.parseCards(line));
+            communityHand.AddCards(ParseCards.parseCards(line));
+
+            Console.WriteLine("Your best hand is:");
+            myHand.FindBestHand().PrintSortedHand();
         }
     }
 }
