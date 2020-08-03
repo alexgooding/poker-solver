@@ -1,4 +1,5 @@
 ﻿using System;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -13,11 +14,12 @@ namespace PokerSolver
 
             Hand[] twoCardHands = Hand.GenerateAllTwoCardHands();
 
-            var successfulInput = false;
             myHand = new Hand();
             communityHand = new Hand();
 
             string[] line;
+            var successfulInput = false;
+            (SortedHand, HandType) bestHand;
 
             while (!successfulInput)
             {
@@ -42,8 +44,9 @@ namespace PokerSolver
                 }
             }
 
-            Console.WriteLine("Your best hand is:");
-            myHand.FindBestHand().PrintSortedHand();
+            bestHand = myHand.FindBestHand();
+            Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
+            bestHand.Item1.PrintSortedHand();
 
             successfulInput = false;
 
@@ -70,9 +73,10 @@ namespace PokerSolver
                     successfulInput = false;
                 } 
             }
-       
-            Console.WriteLine("Your best hand is:");
-            myHand.FindBestHand().PrintSortedHand();
+
+            bestHand = myHand.FindBestHand();
+            Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
+            bestHand.Item1.PrintSortedHand();
 
             successfulInput = false;
 
@@ -99,9 +103,10 @@ namespace PokerSolver
                     successfulInput = false;
                 }
             }
-            
-            Console.WriteLine("Your best hand is:");
-            myHand.FindBestHand().PrintSortedHand();
+
+            bestHand = myHand.FindBestHand();
+            Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
+            bestHand.Item1.PrintSortedHand();
 
             successfulInput = false;
 
@@ -128,9 +133,10 @@ namespace PokerSolver
                     successfulInput = false;
                 }
             }
-  
-            Console.WriteLine("Your best hand is:");
-            myHand.FindBestHand().PrintSortedHand();
+
+            bestHand = myHand.FindBestHand();
+            Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
+            bestHand.Item1.PrintSortedHand();
         }
     }
 }

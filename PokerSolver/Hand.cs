@@ -444,12 +444,13 @@ namespace PokerSolver
             return new SortedHand(highCard, kickerHand);
         }
 
-        public SortedHand FindBestHand()
+        public (SortedHand, HandType) FindBestHand()
         {
             var handCheckingMethods = new List<Func<SortedHand>> { FindRoyalFlush, FindStraightFlush, FindFour, 
                 FindFullHouse, FindFlush, FindStraight, FindTriple, FindTwoPair, FindPair, FindHighCard };
 
             SortedHand bestHand = new SortedHand();
+            int handTypeIndex = 0;
 
             foreach (var method in handCheckingMethods)
             {
@@ -458,9 +459,10 @@ namespace PokerSolver
                 {
                     break;
                 }
+                handTypeIndex++;
             }
 
-            return bestHand;
+            return (bestHand, (HandType)handTypeIndex);
         }
 
         public static Hand[] GenerateAllTwoCardHands()
