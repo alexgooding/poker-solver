@@ -17,22 +17,30 @@ namespace PokerSolver
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Initialise all possible hands with all possible two card hands
-            allPossibleHands = Hand.GenerateAllTwoCardHands();
+            while (true)
+            {
+                Console.WriteLine("----------------------------------------------");
+                Console.WriteLine("New hand");
+                Console.WriteLine("----------------------------------------------");
 
-            myHand = new Hand();
+                // Initialise all possible hands with all possible two card hands
+                allPossibleHands = Hand.GenerateAllTwoCardHands();
 
-            // Deal
-            runRound("Enter the two cards in your hand (e.g. 5d 7h)", 2);
+                myHand = new Hand();
+                newCards = new Hand();
 
-            // Flop
-            runRound("Enter the first three community cards", 3);
+                // Deal
+                runRound("Enter the two cards in your hand (e.g. 5d 7h)", 2);
 
-            // Turn
-            runRound("Enter the fourth community card", 1);
+                // Flop
+                runRound("Enter the first three community cards", 3);
 
-            // River
-            runRound("Enter the fifth community card", 1);
+                // Turn
+                runRound("Enter the fourth community card", 1);
+
+                // River
+                runRound("Enter the fifth community card", 1);
+            }
         }
 
         private void runRound(string userInputMessage, int numberOfCardsToInput)
