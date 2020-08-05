@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -56,9 +57,9 @@ namespace PokerSolver
             {
                 List<Card> firstHandCards = firstHand.GetCards();
                 List<Card> secondHandCards = secondHand.GetCards();
-                for (int i = 0; i < firstHandCards.Count; i++)
+                foreach (Card firstHandCard in firstHandCards)
                 {
-                    if ((firstHandCards[i].Value != secondHandCards[i].Value) || firstHandCards[i].Suit != secondHandCards[i].Suit)
+                    if (!secondHandCards.Any(x => x.Equals(firstHandCard)))
                     {
                         return false;
                     }
@@ -283,16 +284,16 @@ namespace PokerSolver
             {
                 switch(card.Suit)
                 {
-                    case "c":
+                    case Suit.Clubs:
                         clubCards.AddCard(card);
                         break;
-                    case "d":
+                    case Suit.Diamonds:
                         diamondCards.AddCard(card);
                         break;
-                    case "h":
+                    case Suit.Hearts:
                         heartCards.AddCard(card);
                         break;
-                    case "s":
+                    case Suit.Spades:
                         spadeCards.AddCard(card);
                         break;
                 }
@@ -443,12 +444,13 @@ namespace PokerSolver
             return new SortedHand(highCard, kickerHand);
         }
 
-        public SortedHand FindBestHand()
+        public (SortedHand, HandType) FindBestHand()
         {
             var handCheckingMethods = new List<Func<SortedHand>> { FindRoyalFlush, FindStraightFlush, FindFour, 
                 FindFullHouse, FindFlush, FindStraight, FindTriple, FindTwoPair, FindPair, FindHighCard };
 
             SortedHand bestHand = new SortedHand();
+            int handTypeIndex = 0;
 
             foreach (var method in handCheckingMethods)
             {
@@ -457,9 +459,175 @@ namespace PokerSolver
                 {
                     break;
                 }
+                handTypeIndex++;
             }
 
-            return bestHand;
+            return (bestHand, (HandType)handTypeIndex);
+        }
+
+        public static List<Hand> GenerateAllTwoCardHands()
+        {
+            List<Hand> twoCardHands = new List<Hand>();
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Clubs), new Card(j, Suit.Clubs) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Clubs), new Card(j, Suit.Diamonds) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j) 
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Diamonds), new Card(j, Suit.Clubs) }));
+                    }                    
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Clubs), new Card(j, Suit.Hearts) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Hearts), new Card(j, Suit.Clubs) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Clubs), new Card(j, Suit.Spades) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Spades), new Card(j, Suit.Clubs) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Diamonds), new Card(j, Suit.Diamonds) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Diamonds), new Card(j, Suit.Hearts) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Hearts), new Card(j, Suit.Diamonds) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Diamonds), new Card(j, Suit.Spades) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Spades), new Card(j, Suit.Diamonds) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Hearts), new Card(j, Suit.Hearts) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Hearts), new Card(j, Suit.Spades) }));
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Spades), new Card(j, Suit.Hearts) }));
+                    }
+                }
+            }
+
+            for (int i = 2; i <= 14; i++)
+            {
+                for (int j = 2; j <= i; j++)
+                {
+                    if (i != j)
+                    {
+                        twoCardHands.Add(new Hand(new List<Card> { new Card(i, Suit.Spades), new Card(j, Suit.Spades) }));
+                    }
+                }
+            }
+
+            return twoCardHands;
         }
     }
 }

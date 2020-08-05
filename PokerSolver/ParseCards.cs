@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
@@ -9,30 +12,96 @@ namespace PokerSolver
             Hand myCards = new Hand();
             foreach (string card in cards)
             {
-                myCards.AddCard(parseCard(card));
+                try
+                {
+                    myCards.AddCard(ParseCard(card));
+                }
+                catch (Exception)
+                {
+                    throw new Exception();
+                }
             }
 
             return myCards;
         }
 
-        private static Card parseCard(string card)
+        private static Card ParseCard(string card)
         {
-            var value = "";
-            var suit = "";
-            foreach (char c in card)
+            try
             {
-                if (Char.IsDigit(c))
+                var value = "";
+                Suit suit = Suit.Hearts;
+                foreach (char c in card)
                 {
-                    value += c;
+                    if (Char.IsDigit(c))
+                    {
+                        value += c;
+                    }
+                    else
+                    {
+                        switch (c)
+                        {
+                            case 'H':
+                            case 'h':
+                            case '♥':
+                                suit = Suit.Hearts;
+                                break;
+                            case 'D':
+                            case 'd':
+                            case '♦':
+                                suit = Suit.Diamonds;
+                                break;
+                            case 'S':
+                            case 's':
+                            case '♠':
+                                suit = Suit.Spades;
+                                break;
+                            case 'C':
+                            case 'c':
+                            case '♣':
+                                suit = Suit.Clubs;
+                                break;
+                            case 'J':
+                            case 'j':
+                                value += "11";
+                                break;
+                            case 'Q':
+                            case 'q':
+                                value += "12";
+                                break;
+                            case 'K':
+                            case 'k':
+                                value += "13";
+                                break;
+                            case 'A':
+                            case 'a':
+                                value += "14";
+                                break;
+                            default:
+                                throw new ArgumentException();
+                        }
+                    }
+                }
+                int parsedValue = int.Parse(value);
+                if (parsedValue >= 2 && parsedValue <= 14)
+                {
+                    return new Card(parsedValue, suit);
                 }
                 else
                 {
-                    suit += c;
+                    throw new ValidationException();
                 }
             }
-            Card parsedCard = new Card(int.Parse(value), suit);
-
-            return parsedCard;
+            catch (ValidationException)
+            {
+                Console.WriteLine("Invalid card value entered.");
+                throw new Exception();
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Invalid suit entered.");
+                throw new Exception();
+            }
         }
     }
 }
