@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using static PokerSolver.Constants;
 
 namespace PokerSolver
@@ -60,14 +61,36 @@ namespace PokerSolver
                             case '♣':
                                 suit = Suit.Clubs;
                                 break;
+                            case 'J':
+                            case 'j':
+                                value += "11";
+                                break;
+                            case 'Q':
+                            case 'q':
+                                value += "12";
+                                break;
+                            case 'K':
+                            case 'k':
+                                value += "13";
+                                break;
+                            case 'A':
+                            case 'a':
+                                value += "14";
+                                break;
                             default:
                                 throw new ArgumentException();
                         }
                     }
                 }
-                Card parsedCard = new Card(int.Parse(value), suit);
-
-                return parsedCard;
+                int parsedValue = int.Parse(value);
+                if (parsedValue >= 2 && parsedValue <= 14)
+                {
+                    return new Card(parsedValue, suit);
+                }
+                else
+                {
+                    throw new ValidationException();
+                }
             }
             catch (ValidationException)
             {

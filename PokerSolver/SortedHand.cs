@@ -18,6 +18,25 @@ namespace PokerSolver
         public Hand MainHand { get; set; }
         public Hand KickerHand { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            var item = obj as SortedHand;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            if (Hand.IsEqual(this.MainHand, item.MainHand) && Hand.IsEqual(this.KickerHand, item.KickerHand))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public bool? IsBetterThanHand(SortedHand secondHand)
         // Compare the main hand and kicker hand of two hands of the same type (e.g. flush, pair, etc...)
         {
@@ -58,7 +77,7 @@ namespace PokerSolver
             {
                 foreach (Card card in MainHand.GetCards())
                 {
-                    sortedHandString += String.Format("{0}{1}, ", card.Value, Constants.FriendlySuitNames[card.Suit]);
+                    sortedHandString += String.Format("{0}{1}, ", FriendlyValueNames[card.Value], Constants.FriendlySuitNames[card.Suit]);
                 }
                 sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
             }         
@@ -67,7 +86,7 @@ namespace PokerSolver
             {
                 foreach (Card card in KickerHand.GetCards())
                 {
-                    sortedHandString += String.Format("{0}{1}, ", card.Value, Constants.FriendlySuitNames[card.Suit]);
+                    sortedHandString += String.Format("{0}{1}, ", FriendlyValueNames[card.Value], Constants.FriendlySuitNames[card.Suit]);
                 }
                 sortedHandString = sortedHandString.Remove(sortedHandString.Length - 2);
             }

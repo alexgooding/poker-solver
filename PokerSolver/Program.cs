@@ -5,7 +5,7 @@
         static void Main(string[] args)
         {
             RunSolver solver = new RunSolver();
-            solver.runMainWorkflow(1);
+            solver.RunMainWorkflow(1);
         }
     }
 }

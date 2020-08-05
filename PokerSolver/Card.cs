@@ -5,7 +5,6 @@ namespace PokerSolver
 {
     public class Card
     {
-        [Required, RangeAttribute(2, 14)]
         public int Value { get; set; }
         public Suit Suit { get; set; }
 
@@ -13,6 +12,25 @@ namespace PokerSolver
         {
             this.Value = value;
             this.Suit = suit;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var item = obj as Card;
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            if (this.Value == item.Value && this.Suit == item.Suit)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

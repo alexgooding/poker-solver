@@ -57,9 +57,9 @@ namespace PokerSolver
             {
                 List<Card> firstHandCards = firstHand.GetCards();
                 List<Card> secondHandCards = secondHand.GetCards();
-                for (int i = 0; i < firstHandCards.Count; i++)
+                foreach (Card firstHandCard in firstHandCards)
                 {
-                    if ((firstHandCards[i].Value != secondHandCards[i].Value) || firstHandCards[i].Suit != secondHandCards[i].Suit)
+                    if (!secondHandCards.Any(x => x.Equals(firstHandCard)))
                     {
                         return false;
                     }
@@ -465,7 +465,7 @@ namespace PokerSolver
             return (bestHand, (HandType)handTypeIndex);
         }
 
-        public static Hand[] GenerateAllTwoCardHands()
+        public static List<Hand> GenerateAllTwoCardHands()
         {
             List<Hand> twoCardHands = new List<Hand>();
 
@@ -627,7 +627,7 @@ namespace PokerSolver
                 }
             }
 
-            return twoCardHands.ToArray();
+            return twoCardHands;
         }
     }
 }
