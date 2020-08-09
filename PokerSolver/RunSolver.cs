@@ -68,27 +68,26 @@ namespace PokerSolver
                     if (numberOfCardsToInput == 2)
                     {
                         Hand myNewCards = ParseCards.parseCards(line);
-                        foreach (Card card in myNewCards.GetCards())
+                        if (myNewCards.AreDuplicateCards())
                         {
-                            if (myNewCards.GetCards().Count(x => x.Equals(card)) > 1)
-                            {
-                                throw new DuplicateCardException();
-                            }
+                            throw new DuplicateCardException();
+                        } 
+                        else
+                        {
+                            myHand.AddCards(myNewCards);
                         }
-                        myHand.AddCards(myNewCards);
                     }
                     else
                     {
                         newCards = ParseCards.parseCards(line);
-                        foreach (Card card in newCards.GetCards())
+                        if (Hand.DoShareCards(newCards, myHand) || newCards.AreDuplicateCards())
                         {
-                            if (myHand.GetCards().Any(x => x.Equals(card)) || newCards.GetCards().Count(x => x.Equals(card)) > 1)
-                            {
-                                throw new DuplicateCardException();
-                            }
+                            throw new DuplicateCardException();
                         }
-
-                        myHand.AddCards(newCards);
+                        else
+                        {
+                            myHand.AddCards(newCards);
+                        }
                     }
                     successfulInput = true;
                 }
@@ -119,11 +118,19 @@ namespace PokerSolver
         private Dictionary<HandType, List<SortedHand>> GenerateAllPossibleHandsSorted(Hand newCards)
         {
             Dictionary<HandType, List<SortedHand>> allPossibleHandsSorted = new Dictionary<HandType, List<SortedHand>>();
-            for (int i = 0; i < allPossibleHands.Count; i++)
+            for (int i = allPossibleHands.Count - 1; i >= 0; i--)
             {
                 if (newCards != null)
                 {
-                    allPossibleHands[i].AddCards(newCards);
+                    if (!Hand.DoShareCards(allPossibleHands[i], newCards))
+                    {
+                        allPossibleHands[i].AddCards(newCards);
+                    }
+                    else
+                    {
+                        allPossibleHands.RemoveAt(i);
+                        continue;
+                    }
                 }
                 (SortedHand, HandType) bestHand = allPossibleHands[i].FindBestHand();
 
