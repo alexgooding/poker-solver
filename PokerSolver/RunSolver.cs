@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using static PokerSolver.Constants;
 
 namespace PokerSolver
 {
+    public class DuplicateCardException : Exception { }
+
     class RunSolver
     {
         Hand myHand;
@@ -64,11 +67,27 @@ namespace PokerSolver
                     // Hand cards are already present in allPossibleHands in the first round so no need to add again
                     if (numberOfCardsToInput == 2)
                     {
-                        myHand.AddCards(ParseCards.parseCards(line));
+                        Hand myNewCards = ParseCards.parseCards(line);
+                        foreach (Card card in myNewCards.GetCards())
+                        {
+                            if (myNewCards.GetCards().Count(x => x.Equals(card)) > 1)
+                            {
+                                throw new DuplicateCardException();
+                            }
+                        }
+                        myHand.AddCards(myNewCards);
                     }
                     else
                     {
                         newCards = ParseCards.parseCards(line);
+                        foreach (Card card in newCards.GetCards())
+                        {
+                            if (myHand.GetCards().Any(x => x.Equals(card)) || newCards.GetCards().Count(x => x.Equals(card)) > 1)
+                            {
+                                throw new DuplicateCardException();
+                            }
+                        }
+
                         myHand.AddCards(newCards);
                     }
                     successfulInput = true;
@@ -76,6 +95,10 @@ namespace PokerSolver
                 catch (FormatException)
                 {
                     Console.WriteLine("Incorrect number of cards entered.");
+                }
+                catch (DuplicateCardException)
+                {
+                    Console.WriteLine("An inputted card is already in your hand");
                 }
                 catch (Exception)
                 {
