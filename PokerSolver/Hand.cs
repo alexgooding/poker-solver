@@ -68,6 +68,32 @@ namespace PokerSolver
                 return true;
             }
         }
+
+        public bool AreDuplicateCards()
+        {
+            foreach (Card card in cards)
+            {
+                if (cards.Count(x => x.Equals(card)) > 1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool DoShareCards(Hand firstHand, Hand secondHand)
+        {
+            foreach (Card card in firstHand.GetCards())
+            {
+                if (secondHand.GetCards().Any(x => x.Equals(card)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         private Hand GetHighestNCards(int n)
         {
             Hand newHand = new Hand();
