@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -11,14 +12,16 @@ namespace PokerSolver
     class RunSolver
     {
         Hand myHand;
-        Hand communityHand;
         Hand newCards;
         Dictionary<HandType, List<SortedHand>> allPossibleHandsSorted;
         List<Hand> allPossibleHands;
+        (SortedHand, HandType) bestHand;
 
         public void RunMainWorkflow(int numberOfPlayers)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            Console.BufferHeight = 1350;
 
             while (true)
             {
@@ -43,6 +46,9 @@ namespace PokerSolver
 
                 // River
                 runRound("Enter the fifth community card", 1);
+
+                // TODO find a better way of ensure you can print out the hand ranking list on the river.
+                PrintHandRankingList();
             }
         }
 
@@ -52,7 +58,6 @@ namespace PokerSolver
 
             string[] line;
             var successfulInput = false;
-            (SortedHand, HandType) bestHand;
 
             while (!successfulInput)
             {
@@ -60,12 +65,17 @@ namespace PokerSolver
                 line = Console.ReadLine().Split(null);
                 try
                 {
-                    if (line.Length != numberOfCardsToInput)
+                    if (line[0] == "p")
+                    {
+                        PrintHandRankingList();
+                        continue;
+                    }
+                    else if (line.Length != numberOfCardsToInput)
                     {
                         throw new FormatException();
                     }
                     // Hand cards are already present in allPossibleHands in the first round so no need to add again
-                    if (numberOfCardsToInput == 2)
+                    else if (numberOfCardsToInput == 2)
                     {
                         Hand myNewCards = ParseCards.parseCards(line);
                         if (myNewCards.AreDuplicateCards())
@@ -97,7 +107,7 @@ namespace PokerSolver
                 }
                 catch (DuplicateCardException)
                 {
-                    Console.WriteLine("An inputted card is already in your hand");
+                    Console.WriteLine("An inputted card is already in your hand.");
                 }
                 catch (Exception)
                 {
@@ -138,12 +148,16 @@ namespace PokerSolver
                 {
                     allPossibleHandsSorted.Add(bestHand.Item2, new List<SortedHand> { bestHand.Item1 });
                 }
-                catch (ArgumentException)
+                catch (Exception)
                 {
-                    allPossibleHandsSorted[bestHand.Item2].Add(bestHand.Item1);
+                    if (!allPossibleHandsSorted[bestHand.Item2].Any(x => x.Equals(bestHand.Item1)))
+                    {
+                        allPossibleHandsSorted[bestHand.Item2].Add(bestHand.Item1);
+                    }
                 }
             }
 
+            // TODO Remove duplicate sorted hands using hashset or something similar. Alternatively check that a sorted hand is not already in the dictionary before adding.
             return allPossibleHandsSorted;
         }
         
@@ -200,6 +214,39 @@ namespace PokerSolver
             }
 
             return rank;
+        }
+
+        private void PrintHandRankingList()
+        {
+            if (allPossibleHandsSorted == null)
+            {
+                Console.WriteLine("Please enter your hand first.");
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    try
+                    {
+                        foreach (SortedHand hand in allPossibleHandsSorted[(HandType)i])
+                        {
+                            if (hand.Equals(bestHand.Item1))
+                            {
+                                Console.Write("Your best hand -> ");
+                            }
+                            else
+                            {
+                                Console.Write("                  ");
+                            }
+                            hand.PrintSortedHand();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        continue;
+                    }
+                }
+            }
         }
     }
 }
