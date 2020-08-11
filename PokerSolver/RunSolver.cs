@@ -47,8 +47,8 @@ namespace PokerSolver
                 // River
                 runRound("Enter the fifth community card", 1);
 
-                // TODO find a better way of ensure you can print out the hand ranking list on the river.
-                PrintHandRankingList();
+                // Final ranking
+                runRound("Print the final hand ranking my pressing 'p'", 0);
             }
         }
 
@@ -68,6 +68,10 @@ namespace PokerSolver
                     if (line[0] == "p")
                     {
                         PrintHandRankingList();
+                        if (numberOfCardsToInput == 0)
+                        {
+                            successfulInput = true;
+                        }
                         continue;
                     }
                     else if (line.Length != numberOfCardsToInput)
@@ -115,14 +119,17 @@ namespace PokerSolver
                 }
             }
 
-            bestHand = myHand.FindBestHand();
-            Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
-            bestHand.Item1.PrintSortedHand();
+            if (numberOfCardsToInput != 0)
+            {
+                bestHand = myHand.FindBestHand();
+                Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
+                bestHand.Item1.PrintSortedHand();
 
-            allPossibleHandsSorted = GenerateAllPossibleHandsSorted(newCards);
+                allPossibleHandsSorted = GenerateAllPossibleHandsSorted(newCards);
 
-            handRank = DetermineRankOfHand(bestHand);
-            Console.WriteLine("Your best hand is rank " + handRank.ToString() + " out of " + allPossibleHands.Count.ToString() + ", which is in the top " + string.Format("{0:0.00}", handRank * 100.0 / allPossibleHands.Count) + "%.");
+                handRank = DetermineRankOfHand(bestHand);
+                Console.WriteLine("Your best hand is rank " + handRank.ToString() + " out of " + allPossibleHands.Count.ToString() + ", which is in the top " + string.Format("{0:0.00}", handRank * 100.0 / allPossibleHands.Count) + "%.");
+            }
         }
 
         private Dictionary<HandType, List<SortedHand>> GenerateAllPossibleHandsSorted(Hand newCards)
