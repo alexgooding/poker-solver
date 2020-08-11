@@ -22,6 +22,8 @@ namespace PokerSolver
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.BufferHeight = 1350;
+            Console.SetWindowSize(Console.WindowWidth*2, Console.WindowHeight*2);
+            Console.ForegroundColor = ConsoleColor.Green;
 
             while (true)
             {
@@ -48,7 +50,7 @@ namespace PokerSolver
                 runRound("Enter the fifth community card", 1);
 
                 // Final ranking
-                runRound("Print the final hand ranking my pressing 'p'", 0);
+                runRound("Print the final hand ranking by pressing 'p' (you can press 'p' at any point to see the current hand ranking)", 0);
             }
         }
 
