@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static PokerSolver.Constants;
 
 namespace PokerSolver
@@ -20,7 +21,7 @@ namespace PokerSolver
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.BufferHeight = 1350;
-            Console.SetWindowSize(100, 50);
+            Console.SetWindowSize(120, 50);
             Console.ForegroundColor = ConsoleColor.Green;
 
             while (true)
@@ -123,7 +124,7 @@ namespace PokerSolver
             {
                 bestHand = myHand.FindBestHand();
                 Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
-                bestHand.Item1.PrintSortedHand();
+                Console.WriteLine(bestHand.Item1.BuildSortedHandString());
                 Console.WriteLine("");
 
                 allPossibleHandsSorted = GenerateAllPossibleHandsSorted(newCards);
@@ -232,6 +233,10 @@ namespace PokerSolver
             }
             else
             {
+                Console.WriteLine("");
+                Console.WriteLine("{0, 20}|{1,-26}| {2}", "", "Best hand", "Number of equivalent hands");
+                Console.WriteLine("{0, 20}|{1,-26}|{2}", "--------------------", "--------------------------", "----------------------------");
+
                 for (int i = 0; i < 10; i++)
                 {
                     try
@@ -265,30 +270,34 @@ namespace PokerSolver
                     }
                 }
             }
+
+            Console.WriteLine("");
         }
 
         private void printHandRankingRow(SortedHand hand, int numberOfEquivalentStrengthHands)
         {
+            StringBuilder builder = new StringBuilder();
+            string bestHandIndicator = "";
+            string sortedHandString = "";
+
             // Check to see if cards can be compared
             if (hand.MainHand.GetCards().Count == bestHand.Item1.MainHand.GetCards().Count)
             {
                 if (hand.IsBetterThanHand(bestHand.Item1) == null)
                 {
-                    Console.Write("Your best hand -> ");
-                    bestHand.Item1.PrintSortedHand();
-                }
-                else
-                {
-                    Console.Write("                  ");
-                    hand.PrintSortedHand();
+                    bestHandIndicator = "Your best hand -> ";
+                    sortedHandString = bestHand.Item1.BuildSortedHandString();
                 }
             }
-            else
+            if (bestHandIndicator == "")
             {
-                Console.Write("                  ");
-                hand.PrintSortedHand();
+                sortedHandString = hand.BuildSortedHandString();
             }
-            Console.WriteLine(String.Format(" {0}", numberOfEquivalentStrengthHands));
+            builder.Append(String.Format("{0, 20}", bestHandIndicator));
+            builder.Append(String.Format("|{0,-26}|", sortedHandString));
+            builder.Append(String.Format(" {0}", numberOfEquivalentStrengthHands));
+
+            Console.WriteLine(builder);
         }
     }
 }
