@@ -70,7 +70,7 @@ namespace PokerSolver
             return null;
         }
 
-        public void PrintSortedHand()
+        public string BuildSortedHandString()
         {
             string sortedHandString = "(";
             if (MainHand != null && MainHand.CardCount() != 0)
@@ -92,7 +92,7 @@ namespace PokerSolver
             }
             sortedHandString += ")";
 
-            Console.WriteLine(sortedHandString);
+            return sortedHandString;
         }
     }
    
