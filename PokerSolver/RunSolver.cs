@@ -20,7 +20,7 @@ namespace PokerSolver
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.BufferHeight = 1350;
-            Console.SetWindowSize(Console.WindowWidth*2, Console.WindowHeight*2);
+            Console.SetWindowSize(100, 50);
             Console.ForegroundColor = ConsoleColor.Green;
 
             while (true)
@@ -124,11 +124,13 @@ namespace PokerSolver
                 bestHand = myHand.FindBestHand();
                 Console.WriteLine("Your best hand is a " + FriendlyHandTypes[bestHand.Item2] + ":");
                 bestHand.Item1.PrintSortedHand();
+                Console.WriteLine("");
 
                 allPossibleHandsSorted = GenerateAllPossibleHandsSorted(newCards);
+                int allPossibleHandsCount = (from item in allPossibleHandsSorted.Values select item.Count).Sum();
 
                 handRank = DetermineRankOfHand(bestHand);
-                Console.WriteLine("Your best hand is rank " + handRank.ToString() + " out of " + allPossibleHands.Count.ToString() + ", which is in the top " + string.Format("{0:0.00}", handRank * 100.0 / allPossibleHands.Count) + "%.");
+                Console.WriteLine(String.Format("You best hand is rank {0} out of {1}, which is in the top {2}%.", handRank, allPossibleHandsCount, string.Format("{0:0.00}", handRank * 100.0 / allPossibleHandsCount)));
             }
         }
 
@@ -164,7 +166,6 @@ namespace PokerSolver
                 }
             }
 
-            // TODO Remove duplicate sorted hands using hashset or something similar. Alternatively check that a sorted hand is not already in the dictionary before adding.
             return allPossibleHandsSorted;
         }
         
@@ -235,18 +236,28 @@ namespace PokerSolver
                 {
                     try
                     {
-                        foreach (SortedHand hand in allPossibleHandsSorted[(HandType)i])
+                        SortedHand previousHand = null;
+                        int numberOfEquivalentStrengthHands = 1;
+                        foreach (SortedHand hand in SortHandsInDescendingRank(allPossibleHandsSorted[(HandType)i]))
                         {
-                            if (hand.Equals(bestHand.Item1))
+                            
+                            if (previousHand != null)
                             {
-                                Console.Write("Your best hand -> ");
+                                if (hand.IsBetterThanHand(previousHand) == null)
+                                {
+                                    numberOfEquivalentStrengthHands++;
+                                }
+                                else
+                                {
+                                    printHandRankingRow(previousHand, numberOfEquivalentStrengthHands);
+                                    numberOfEquivalentStrengthHands = 1;
+                                }
                             }
-                            else
-                            {
-                                Console.Write("                  ");
-                            }
-                            hand.PrintSortedHand();
+                            
+                            previousHand = hand;
                         }
+
+                        printHandRankingRow(previousHand, numberOfEquivalentStrengthHands);
                     }
                     catch (Exception)
                     {
@@ -254,6 +265,30 @@ namespace PokerSolver
                     }
                 }
             }
+        }
+
+        private void printHandRankingRow(SortedHand hand, int numberOfEquivalentStrengthHands)
+        {
+            // Check to see if cards can be compared
+            if (hand.MainHand.GetCards().Count == bestHand.Item1.MainHand.GetCards().Count)
+            {
+                if (hand.IsBetterThanHand(bestHand.Item1) == null)
+                {
+                    Console.Write("Your best hand -> ");
+                    bestHand.Item1.PrintSortedHand();
+                }
+                else
+                {
+                    Console.Write("                  ");
+                    hand.PrintSortedHand();
+                }
+            }
+            else
+            {
+                Console.Write("                  ");
+                hand.PrintSortedHand();
+            }
+            Console.WriteLine(String.Format(" {0}", numberOfEquivalentStrengthHands));
         }
     }
 }

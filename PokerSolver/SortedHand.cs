@@ -92,7 +92,7 @@ namespace PokerSolver
             }
             sortedHandString += ")";
 
-            Console.WriteLine(sortedHandString);
+            Console.Write(sortedHandString);
         }
     }
    
