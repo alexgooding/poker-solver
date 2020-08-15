@@ -66,6 +66,7 @@ namespace PokerSolver
                 line = Console.ReadLine().Split(null);
                 try
                 {
+                    // print hand ranking list if 'p' is pressed
                     if (line[0] == "p")
                     {
                         PrintHandRankingList();
@@ -79,21 +80,9 @@ namespace PokerSolver
                     {
                         throw new FormatException();
                     }
-                    // Hand cards are already present in allPossibleHands in the first round so no need to add again
-                    else if (numberOfCardsToInput == 2)
-                    {
-                        Hand myNewCards = ParseCards.parseCards(line);
-                        if (myNewCards.AreDuplicateCards())
-                        {
-                            throw new DuplicateCardException();
-                        } 
-                        else
-                        {
-                            myHand.AddCards(myNewCards);
-                        }
-                    }
                     else
                     {
+                        // Parse new cards and check there are no duplicate cards being inputted
                         newCards = ParseCards.parseCards(line);
                         if (Hand.DoShareCards(newCards, myHand) || newCards.AreDuplicateCards())
                         {
@@ -103,8 +92,8 @@ namespace PokerSolver
                         {
                             myHand.AddCards(newCards);
                         }
+                        successfulInput = true;
                     }
-                    successfulInput = true;
                 }
                 catch (FormatException)
                 {
@@ -142,14 +131,28 @@ namespace PokerSolver
             {
                 if (newCards != null)
                 {
-                    if (!Hand.DoShareCards(allPossibleHands[i], newCards))
+                    // Don't add player hand cards to all possible hands, as they're already in there
+                    // Only keep the exact player cards in all possible hands, as all other hands containing one of those cards are not possible for any players to have
+                    if (newCards.GetCards().Count == 2)
                     {
-                        allPossibleHands[i].AddCards(newCards);
+                        if (Hand.IsEqual(allPossibleHands[i], newCards)) { }
+                        else if (Hand.DoShareCards(allPossibleHands[i], newCards))
+                        {
+                            allPossibleHands.RemoveAt(i);
+                            continue;
+                        }
                     }
                     else
                     {
-                        allPossibleHands.RemoveAt(i);
-                        continue;
+                        if (!Hand.DoShareCards(allPossibleHands[i], newCards))
+                        {
+                            allPossibleHands[i].AddCards(newCards);
+                        }
+                        else
+                        {
+                            allPossibleHands.RemoveAt(i);
+                            continue;
+                        }
                     }
                 }
                 (SortedHand, HandType) bestHand = allPossibleHands[i].FindBestHand();
