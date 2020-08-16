@@ -29,6 +29,7 @@ namespace PokerSolver
 
         public static Dictionary<int, string> FriendlyValueNames = new Dictionary<int, string>
         {
+            { 1, "A" },
             { 2, "2" },
             { 3, "3" },
             { 4, "4" },
