@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PokerSolver": {
+      "commandName": "Project",
+      "commandLineArgs": "1"
+    }
+  }
+}
