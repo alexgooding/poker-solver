@@ -21,7 +21,7 @@ namespace PokerSolver
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Console.BufferHeight = 1350;
-            Console.SetWindowSize(120, 50);
+            Console.SetWindowSize(Console.LargestWindowWidth - 20, Console.LargestWindowHeight - 10);
             Console.ForegroundColor = ConsoleColor.Green;
 
             while (true)
@@ -36,25 +36,40 @@ namespace PokerSolver
                 myHand = new Hand();
                 newCards = new Hand();
 
+                bool hasFolded = false;
+
                 // Deal
-                runRound("Enter the two cards in your hand (e.g. 5d 7h)", 2);
+                hasFolded = RunRound("Enter the two cards in your hand (e.g. 5d 7h)", 2);
 
                 // Flop
-                runRound("Enter the first three community cards", 3);
-
+                if (!hasFolded)
+                {
+                    hasFolded = RunRound("Enter the first three community cards", 3);
+                }
+                
                 // Turn
-                runRound("Enter the fourth community card", 1);
-
+                if (!hasFolded)
+                {
+                    hasFolded = RunRound("Enter the fourth community card", 1);
+                }
+                
                 // River
-                runRound("Enter the fifth community card", 1);
+                if (!hasFolded)
+                {
+                    hasFolded = RunRound("Enter the fifth community card", 1);
+                }
 
                 // Final ranking
-                runRound("Print the final hand ranking by pressing 'p' (you can press 'p' at any point to see the current hand ranking)", 0);
+                if (!hasFolded)
+                {
+                    hasFolded = RunRound("Print the final hand ranking by pressing 'p' (you can press 'p' at any point to see the current hand ranking)", 0);
+                }
             }
         }
 
-        private void runRound(string userInputMessage, int numberOfCardsToInput)
+        private bool RunRound(string userInputMessage, int numberOfCardsToInput)
         {
+            bool hasFolded = false;
             int handRank;
 
             string[] line;
@@ -75,6 +90,11 @@ namespace PokerSolver
                             successfulInput = true;
                         }
                         continue;
+                    }
+                    else if (line[0] == "f")
+                    {
+                        hasFolded = true;
+                        return hasFolded;
                     }
                     else if (line.Length != numberOfCardsToInput)
                     {
@@ -122,6 +142,8 @@ namespace PokerSolver
                 handRank = DetermineRankOfHand(bestHand);
                 Console.WriteLine(String.Format("You best hand is rank {0} out of {1}, which is in the top {2}%.", handRank, allPossibleHandsCount, string.Format("{0:0.00}", handRank * 100.0 / allPossibleHandsCount)));
             }
+
+            return hasFolded;
         }
 
         private Dictionary<HandType, List<SortedHand>> GenerateAllPossibleHandsSorted(Hand newCards)
